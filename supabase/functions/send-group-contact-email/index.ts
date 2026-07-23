@@ -224,27 +224,25 @@ Deno.serve(async (req: Request) => {
       `;
 
       try {
-        const emailResponse = await fetch(`${supabaseUrl}/auth/v1/admin/generate_link`, {
+        const resendResponse = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
-            apikey: Deno.env.get("SUPABASE_ANON_KEY")!,
-            Authorization: `Bearer ${supabaseServiceKey}`,
             "Content-Type": "application/json",
+            Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`,
           },
           body: JSON.stringify({
-            type: "email",
-            email: member.email,
-            data: {
-              subject: `${groupName} - Contact Information for ${tournamentName}`,
-              html: emailHtml,
-            },
+            from: "hello@dinkly.co.nz",
+            to: [member.email],
+            subject: `${groupName} - Contact Information for ${tournamentName}`,
+            html: emailHtml,
           }),
         });
 
-        if (emailResponse.ok) {
+        if (resendResponse.ok) {
           emailsSent.push(member.email);
         } else {
-          console.error(`Failed to send email to ${member.email}`);
+          const errorData = await resendResponse.json().catch(() => ({}));
+          console.error(`Failed to send email to ${member.email}:`, errorData);
           emailsFailed.push(member.email);
         }
       } catch (error) {

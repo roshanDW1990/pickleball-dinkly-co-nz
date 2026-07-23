@@ -15,10 +15,10 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const RESEND_API_KEY = "re_dJoAkXfU_FF5ZHcZDnfTUXR1FMYDDKs1e";
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 
     const emailData = {
-      from: "roshan_21@hotmail.com",
+      from: "hello@dinkly.co.nz",
       to: ["socialtennisleagues@gmail.com"],
       subject: "Test Email from Pickleball Platform",
       html: `

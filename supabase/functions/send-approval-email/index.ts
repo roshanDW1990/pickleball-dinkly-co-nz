@@ -186,7 +186,7 @@ Deno.serve(async (req: Request) => {
           "Authorization": `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: "onboarding@resend.dev",
+          from: "noreply@dinkly.co.nz",
           to: [recipient.email],
           subject: `Match Result Approved — ${tournamentName}`,
           html: buildEmailHtml(recipient.firstName, recipient.isWinner, recipient.opponentName),

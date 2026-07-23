@@ -162,7 +162,7 @@ Deno.serve(async (req: Request) => {
           "Authorization": `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: "onboarding@resend.dev",
+          from: "noreply@dinkly.co.nz",
           to: [recipient.email],
           subject: "Match Result Rejected — Please Resubmit",
           html: buildEmailHtml(recipient.firstName),
