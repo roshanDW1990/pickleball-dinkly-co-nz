@@ -17,9 +17,17 @@ Deno.serve(async (req: Request) => {
   try {
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 
+    let recipient = "socialtennisleagues@gmail.com";
+    try {
+      const body = await req.json();
+      if (body?.to) recipient = body.to;
+    } catch {
+      // no body or invalid JSON — use default recipient
+    }
+
     const emailData = {
       from: "hello@dinkly.co.nz",
-      to: ["socialtennisleagues@gmail.com"],
+      to: [recipient],
       subject: "Test Email from Pickleball Platform",
       html: `
         <!DOCTYPE html>
