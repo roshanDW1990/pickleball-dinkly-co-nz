@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pickleball Platform — Data Flow Diagram</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 32px 24px 64px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 40px;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #475569;
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-bottom: 32px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 14px;
+      padding-left: 4px;
+    }
+
+    /* ── FLOW ROW ── */
+    .flow-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-bottom: 10px;
+    }
+
+    /* ── NODE ── */
+    .node {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      min-width: 110px;
+      max-width: 160px;
+      text-align: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .node .node-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+    }
+    .node .node-sub {
+      font-size: 10px;
+      opacity: 0.75;
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    /* colours */
+    .node-actor   { background:#dbeafe; color:#1d4ed8; border:1.5px solid #93c5fd; }
+    .node-action  { background:#dcfce7; color:#15803d; border:1.5px solid #86efac; }
+    .node-edge    { background:#fef9c3; color:#92400e; border:1.5px solid #fde68a; }
+    .node-db      { background:#f3e8ff; color:#6b21a8; border:1.5px solid #d8b4fe; }
+    .node-email   { background:#fce7f3; color:#9d174d; border:1.5px solid #f9a8d4; }
+    .node-result  { background:#e0f2fe; color:#075985; border:1.5px solid #7dd3fc; }
+    .node-admin   { background:#fff7ed; color:#c2410c; border:1.5px solid #fdba74; }
+    .node-stripe  { background:#f0fdf4; color:#065f46; border:1.5px solid #6ee7b7; }
+
+    /* ── ARROW ── */
+    .arrow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .arrow-line {
+      height: 2px;
+      width: 28px;
+      background: #cbd5e1;
+      position: relative;
+    }
+    .arrow-line.dashed {
+      background: repeating-linear-gradient(to right, #cbd5e1 0, #cbd5e1 4px, transparent 4px, transparent 8px);
+    }
+    .arrow-head {
+      width: 0; height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid #cbd5e1;
+      flex-shrink: 0;
+    }
+    .arrow-label {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: #94a3b8;
+      white-space: nowrap;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1.5px solid #e2e8f0;
+      margin: 28px 0;
+    }
+
+    /* ── CARD CONTAINER ── */
+    .card {
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px 24px 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── STACKED FLOWS ── */
+    .flows { display: flex; flex-direction: column; gap: 10px; }
+
+    /* ── TABLE ── */
+    .db-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      margin-top: 8px;
+    }
+    .db-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 600;
+      text-align: left;
+      padding: 7px 10px;
+      border-bottom: 1.5px solid #e2e8f0;
+    }
+    .db-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+      vertical-align: top;
+    }
+    .db-table tr:last-child td { border-bottom: none; }
+    .pill {
+      display: inline-block;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-right: 3px;
+      margin-bottom: 2px;
+    }
+    .pill-purple { background:#f3e8ff; color:#6b21a8; }
+    .pill-blue   { background:#dbeafe; color:#1d4ed8; }
+    .pill-green  { background:#dcfce7; color:#15803d; }
+    .pill-orange { background:#fff7ed; color:#c2410c; }
+    .pill-pink   { background:#fce7f3; color:#9d174d; }
+
+    @media (max-width: 600px) {
+      .arrow-line { width: 16px; }
+      .node { min-width: 90px; padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Pickleball Platform — Data Flow Diagram</h1>
+<p class="subtitle">End-to-end flow of every major feature across actors, actions, edge functions, database tables, and email outputs</p>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#93c5fd"></div> Actor / User</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#86efac"></div> Action / UI Step</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fde68a"></div> Edge Function</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#d8b4fe"></div> Database Table</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f9a8d4"></div> Email Sent</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7dd3fc"></div> Outcome / State</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fdba74"></div> Admin Action</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#6ee7b7"></div> Stripe / Payment</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  1. AUTHENTICATION                         -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    1. Authentication
+    <span class="card-title-badge" style="background:#dbeafe;color:#1d4ed8;">Login · Sign Up · Password Reset</span>
+  </div>
+  <div class="flows">
+
+    <!-- Sign Up -->
+    <div class="section-title">Sign Up</div>
+    <div class="flow-row">
+      <div class="node node-actor"><span class="node-label">Visitor</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">fills form</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Sign Up Form</span><span class="node-sub">Name · Email · Password · Level · DUPR · Phone</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">signUp()</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">auth.users</span><span class="node-sub">Supabase Auth</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">trigger</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">profiles</span><span class="node-sub">user details</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">fire & forget</span></div><div class="arrow-head"></div></div>
+      <div class="node node-edge"><span class="node-label">send-welcome-email</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-email"><span class="node-label">Welcome Email</span><span class="node-sub">to user</span></div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Sign In -->
+    <div class="section-title">Sign In</div>
+    <div class="flow-row">
+      <div class="node node-actor"><span class="node-label">Registered User</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">email + password</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Sign In Form</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">signInWithPassword()</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">auth.users</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">fetch profile</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">profiles</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-result"><span class="node-label">Dashboard</span><span class="node-sub">session created</span></div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Password Reset -->
+    <div class="section-title">Password Reset</div>
+    <div class="flow-row">
+      <div class="node node-actor"><span class="node-label">User</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">enters email</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Forgot Password Form</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">resetPasswordForEmail()</span></div><div class="arrow-head"></div></div>
+      <div class="node node-email"><span class="node-label">Reset Email</span><span class="node-sub">link → new password</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">updateUser()</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">auth.users</span><span class="node-sub">password updated</span></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  2. JOINING A LEAGUE (TOURNAMENT REG)       -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    2. Joining a League (Tournament Registration)
+    <span class="card-title-badge" style="background:#f0fdf4;color:#065f46;">Stripe · Checkout · Webhook</span>
+  </div>
+  <div class="flows">
+
+    <div class="flow-row">
+      <div class="node node-actor"><span class="node-label">Logged-in User</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">browses</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Upcoming Tournaments</span><span class="node-sub">reads tournaments table</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">clicks Register</span></div><div class="arrow-head"></div></div>
+      <div class="node node-edge"><span class="node-label">create-checkout-session</span><span class="node-sub">Edge Function</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">creates session</span></div><div class="arrow-head"></div></div>
+      <div class="node node-stripe"><span class="node-label">Stripe Checkout</span><span class="node-sub">payment page</span></div>
+    </div>
+
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="node node-stripe"><span class="node-label">Stripe</span><span class="node-sub">payment confirmed</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">webhook POST</span></div><div class="arrow-head"></div></div>
+      <div class="node node-edge"><span class="node-label">stripe-webhook</span><span class="node-sub">Edge Function</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">insert</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournament_registrations</span><span class="node-sub">payment_status: completed</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-result"><span class="node-label">Registration Success</span><span class="node-sub">redirect to /upcoming-tournaments</span></div>
+    </div>
+
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="node node-actor"><span class="node-label">User</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">views</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">My Registrations</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">join query</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournament_registrations</span><span class="node-sub">+ tournaments</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-result"><span class="node-label">Current & History</span><span class="node-sub">status · fee · dates</span></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  3. ADMIN: TOURNAMENT MANAGEMENT           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    3. Admin — Tournament Management
+    <span class="card-title-badge" style="background:#fff7ed;color:#c2410c;">Create · Approve · Archive</span>
+  </div>
+  <div class="flows">
+
+    <div class="flow-row">
+      <div class="node node-admin"><span class="node-label">Admin</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">creates</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Tournament Form</span><span class="node-sub">name · dates · fee · format</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">insert</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournaments</span><span class="node-sub">status: Pending</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">approve</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournaments</span><span class="node-sub">status: Approved</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">archive</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournaments</span><span class="node-sub">archived: true</span></div>
+    </div>
+
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="node node-admin"><span class="node-label">Admin</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">views registrations</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournament_registrations</span><span class="node-sub">+ profiles</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-result"><span class="node-label">Player List</span><span class="node-sub">name · email · payment · date</span></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  4. ADMIN: GROUPS & MATCHES SETUP          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    4. Admin — Groups &amp; Matches Setup
+    <span class="card-title-badge" style="background:#fff7ed;color:#c2410c;">Assign Groups · Generate Fixtures</span>
+  </div>
+  <div class="flows">
+
+    <!-- Create Group -->
+    <div class="section-title">Create Group &amp; Assign Members</div>
+    <div class="flow-row">
+      <div class="node node-admin"><span class="node-label">Admin</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">creates group</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournament_groups</span><span class="node-sub">name · tournament_id</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">adds players</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">group_members</span><span class="node-sub">group_id · user_id · registration_id</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">email all</span></div><div class="arrow-head"></div></div>
+      <div class="node node-edge"><span class="node-label">send-group-contact-email</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-email"><span class="node-label">Contact Email</span><span class="node-sub">to all group members</span></div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Generate Matches -->
+    <div class="section-title">Generate Round-Robin Fixtures</div>
+    <div class="flow-row">
+      <div class="node node-admin"><span class="node-label">Admin</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">selects group</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Generate Round Robin</span><span class="node-sub">each player vs every other</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">bulk insert</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">matches</span><span class="node-sub">player1_id · player2_id · round · status: scheduled</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-result"><span class="node-label">Fixtures Created</span><span class="node-sub">visible to players in Results page</span></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  5. RECORDING MATCH RESULTS                -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    5. Recording Match Results (Points)
+    <span class="card-title-badge" style="background:#dcfce7;color:#15803d;">Submit · Approve · Standings</span>
+  </div>
+  <div class="flows">
+
+    <!-- Player submits result -->
+    <div class="section-title">Player Submits Scores</div>
+    <div class="flow-row">
+      <div class="node node-actor"><span class="node-label">Player</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">views matches</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">matches</span><span class="node-sub">status: scheduled</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">Submit Result</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Result Form</span><span class="node-sub">Set 1/2/3 scores · location · date · comments</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">validate + insert</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">match_results</span><span class="node-sub">status: pending · winner_id</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">update</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">matches</span><span class="node-sub">status: in_progress · result_submitted: true</span></div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Admin reviews -->
+    <div class="section-title">Admin Reviews &amp; Approves</div>
+    <div class="flow-row">
+      <div class="node node-admin"><span class="node-label">Admin</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">reviews</span></div><div class="arrow-head"></div></div>
+      <div class="node node-action"><span class="node-label">Results Approval</span><span class="node-sub">filter by tournament / status</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">approve</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">match_results</span><span class="node-sub">status: approved · reviewed_by · reviewed_at</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">update</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">matches</span><span class="node-sub">status: completed · result_approved: true</span></div>
+    </div>
+
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="node node-admin"><span class="node-label">Admin</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">reject + notes</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">match_results</span><span class="node-sub">status: rejected · admin_notes</span></div>
+      <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+      <div class="node node-result"><span class="node-label">Feedback shown</span><span class="node-sub">player sees rejection reason</span></div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Standings calculation -->
+    <div class="section-title">Standings &amp; Points Calculation (read-only, derived)</div>
+    <div class="flow-row">
+      <div class="node node-actor"><span class="node-label">Any User</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">views standings</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">tournament_groups</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">→</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">group_members + profiles</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">→</span></div><div class="arrow-head"></div></div>
+      <div class="node node-db"><span class="node-label">matches + match_results</span><span class="node-sub">result_approved = true</span></div>
+      <div class="arrow"><div class="arrow-line"><span class="arrow-label">calculate</span></div><div class="arrow-head"></div></div>
+      <div class="node node-result"><span class="node-label">Live Standings</span><span class="node-sub">W · L · PTS · early-bird bonus</span></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  6. STANDINGS & POINTS LOGIC               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    6. Points Calculation Logic
+    <span class="card-title-badge" style="background:#e0f2fe;color:#075985;">Rules</span>
+  </div>
+  <table class="db-table">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Points Awarded</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Win a match</td>
+        <td><span class="pill pill-green">+2 pts</span></td>
+        <td>match_results.status = approved, player wins majority of sets</td>
+      </tr>
+      <tr>
+        <td>Lose a match</td>
+        <td><span class="pill pill-blue">+1 pt</span></td>
+        <td>match_results.status = approved, player loses majority of sets</td>
+      </tr>
+      <tr>
+        <td>Early-bird bonus</td>
+        <td><span class="pill pill-orange">+2 pts</span></td>
+        <td>Player completes 3+ approved matches before tournament midpoint date</td>
+      </tr>
+      <tr>
+        <td>Standings sort order</td>
+        <td>Points → Wins → Losses → Sets Won</td>
+        <td>Descending points first, tiebreakers applied in order</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  7. DATABASE TABLES OVERVIEW               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    7. Database Tables &amp; Relationships
+    <span class="card-title-badge" style="background:#f3e8ff;color:#6b21a8;">Supabase Postgres</span>
+  </div>
+  <table class="db-table">
+    <thead>
+      <tr>
+        <th style="width:170px">Table</th>
+        <th>Key Fields</th>
+        <th>Links To</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill pill-purple">auth.users</span></td>
+        <td>id · email · encrypted_password</td>
+        <td>profiles</td>
+      </tr>
+      <tr>
+        <td><span class="pill pill-purple">profiles</span></td>
+        <td>id · first_name · last_name · email · phone_number · pickleball_level · dupr_rating · matches_played · matches_won · matches_lost · is_admin</td>
+        <td>auth.users</td>
+      </tr>
+      <tr>
+        <td><span class="pill pill-purple">tournaments</span></td>
+        <td>id · name · location · start_date · end_date · entry_fee · format · status · archived · created_by</td>
+        <td>profiles (created_by)</td>
+      </tr>
+      <tr>
+        <td><span class="pill pill-purple">tournament_registrations</span></td>
+        <td>id · tournament_id · user_id · amount_paid · payment_status · stripe_payment_intent_id · registered_at</td>
+        <td>tournaments · profiles</td>
+      </tr>
+      <tr>
+        <td><span class="pill pill-purple">tournament_groups</span></td>
+        <td>id · tournament_id · name · description</td>
+        <td>tournaments</td>
+      </tr>
+      <tr>
+        <td><span class="pill pill-purple">group_members</span></td>
+        <td>id · group_id · user_id · registration_id</td>
+        <td>tournament_groups · profiles · tournament_registrations</td>
+      </tr>
+      <tr>
+        <td><span class="pill pill-purple">matches</span></td>
+        <td>id · tournament_id · group_id · player1_id · player2_id · round_number · match_number · status · result_submitted · result_approved</td>
+        <td>tournaments · tournament_groups · profiles (×2)</td>
+      </tr>
+      <tr>
+        <td><span class="pill pill-purple">match_results</span></td>
+        <td>id · match_id · submitted_by · player1_set1/2/3_score · player2_set1/2/3_score · winner_id · status · notes · comments · location · date_completed · admin_notes · reviewed_by · reviewed_at</td>
+        <td>matches · profiles (×3)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  8. EMAIL FLOWS SUMMARY                    -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">
+    8. Email Flows
+    <span class="card-title-badge" style="background:#fce7f3;color:#9d174d;">Automated &amp; Manual</span>
+  </div>
+  <table class="db-table">
+    <thead>
+      <tr>
+        <th>Trigger</th>
+        <th>Edge Function / Method</th>
+        <th>Recipient</th>
+        <th>Content</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>User signs up</td>
+        <td><span class="pill pill-orange">send-welcome-email</span></td>
+        <td>New user</td>
+        <td>Welcome message with name</td>
+      </tr>
+      <tr>
+        <td>Forgot password</td>
+        <td><span class="pill pill-blue">supabase.auth.resetPasswordForEmail()</span></td>
+        <td>User</td>
+        <td>Password reset link</td>
+      </tr>
+      <tr>
+        <td>Admin emails group</td>
+        <td><span class="pill pill-orange">send-group-contact-email</span></td>
+        <td>All group members</td>
+        <td>Group contacts · tournament name</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

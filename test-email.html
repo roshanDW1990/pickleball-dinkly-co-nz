@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Email Sender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #059669;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Send Test Email</h1>
+    <p>Click the button below to send a test email to socialtennisleagues@gmail.com</p>
+    <button onclick="sendTestEmail()">Send Test Email</button>
+    <div id="result"></div>
+
+    <script>
+        async function sendTestEmail() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Sending email...';
+            resultDiv.className = '';
+
+            try {
+                const response = await fetch('https://zebmqaffhnnuqfzcqkjq.supabase.co/functions/v1/send-test-email', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplYm1xYWZmaG5udXFmemNxa2pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTUwMjksImV4cCI6MjA4ODgzMTAyOX0.1EgwZBAS-NRRajMDM1XvyrPGgC2SjywQ0TsaNy1Ri-M',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    resultDiv.textContent = `Success! Email sent. ID: ${data.emailId}`;
+                    resultDiv.className = 'success';
+                } else {
+                    resultDiv.textContent = `Error: ${data.error || data.message || 'Unknown error'}`;
+                    resultDiv.className = 'error';
+                }
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+                resultDiv.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>
