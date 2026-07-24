@@ -115,7 +115,7 @@ Deno.serve(async (req: Request) => {
       // Send registration confirmation email
       try {
         const { data: profile } = await supabaseAdmin
-          .from("user_profiles")
+          .from("profiles")
           .select("first_name, last_name, email")
           .eq("id", userId)
           .single();
