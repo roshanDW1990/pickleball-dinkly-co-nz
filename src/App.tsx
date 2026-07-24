@@ -19,6 +19,7 @@ import { StandingsPage } from './pages/StandingsPage';
 import { LeagueStandingsPage } from './pages/LeagueStandingsPage';
 import { ArchivedStandingsPage } from './pages/ArchivedStandingsPage';
 import { MatchHistoryPage } from './pages/MatchHistoryPage';
+import { AdminDashboard } from './admin/pages/AdminDashboard';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { useAuth } from './hooks/useAuth';
 import { ToastProvider } from './components/common/Toast';
@@ -149,6 +150,18 @@ function AppContent() {
         element={
           isAuthenticated && user ? (
             <MatchHistoryPage user={user} onSignOut={signOut} />
+          ) : (
+            <AuthPage />
+          )
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          isAuthenticated && user && user.isAdmin ? (
+            <AdminDashboard user={user} onSignOut={signOut} />
+          ) : isAuthenticated && user ? (
+            <Dashboard user={user} onSignOut={signOut} />
           ) : (
             <AuthPage />
           )

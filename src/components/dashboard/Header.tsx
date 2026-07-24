@@ -122,7 +122,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onSignOut }) => {
                     <>
                       <hr className="my-2 border-slate-200" />
                       <a
-                        href="/admin.html"
+                        href="/admin"
                         className="w-full px-4 py-2 text-left text-sm text-green-600 hover:bg-green-50 transition-colors duration-150 flex items-center space-x-2"
                         onClick={() => setIsDropdownOpen(false)}
                       >
