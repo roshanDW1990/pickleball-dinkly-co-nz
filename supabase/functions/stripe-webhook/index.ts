@@ -112,6 +112,46 @@ Deno.serve(async (req: Request) => {
         }
       }
 
+      // Send registration confirmation email
+      try {
+        const { data: profile } = await supabaseAdmin
+          .from("user_profiles")
+          .select("first_name, last_name, email")
+          .eq("id", userId)
+          .single();
+
+        const { data: tournamentDetails } = await supabaseAdmin
+          .from("tournaments")
+          .select("name, location, start_date, end_date, entry_fee")
+          .eq("id", tournamentId)
+          .single();
+
+        if (profile && tournamentDetails) {
+          const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+          const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+
+          await fetch(`${supabaseUrl}/functions/v1/send-registration-email`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${serviceRoleKey}`,
+            },
+            body: JSON.stringify({
+              email: profile.email || session.customer_email,
+              firstName: profile.first_name,
+              lastName: profile.last_name,
+              tournamentName: tournamentDetails.name,
+              tournamentLocation: tournamentDetails.location,
+              startDate: tournamentDetails.start_date,
+              endDate: tournamentDetails.end_date,
+              amountPaid: tournamentDetails.entry_fee,
+            }),
+          });
+        }
+      } catch (emailErr) {
+        console.error("Failed to send registration email:", emailErr);
+      }
+
       console.log(`Successfully processed registration ${registrationId} for tournament ${tournamentId}`);
     }
 
