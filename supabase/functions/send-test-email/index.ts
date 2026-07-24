@@ -17,7 +17,7 @@ Deno.serve(async (req: Request) => {
   try {
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 
-    let recipient = "dinkly@gmail.com";
+    let recipient = "dinklynz@gmail.com";
     try {
       const body = await req.json();
       if (body?.to) recipient = body.to;
