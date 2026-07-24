@@ -23,10 +23,31 @@ export const ContactPage: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-    setIsSubmitted(true);
-    setIsSubmitting(false);
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setIsSubmitted(true);
+    } catch (err) {
+      alert('Sorry, something went wrong sending your message. Please try again or email us directly at hello@dinkly.co.nz');
+    } finally {
+      setIsSubmitting(false);
+    }
 
     setTimeout(() => {
       setIsSubmitted(false);
