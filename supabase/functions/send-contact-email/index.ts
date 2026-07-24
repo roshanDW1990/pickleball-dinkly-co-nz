@@ -25,7 +25,7 @@ Deno.serve(async (req: Request) => {
 
     const emailData = {
       from: "hello@dinkly.co.nz",
-      to: ["socialtennisleagues@gmail.com"],
+      to: ["dinkly@gmail.com"],
       reply_to: email,
       subject: `New Contact Form Message from ${firstName} ${lastName}`,
       html: `
