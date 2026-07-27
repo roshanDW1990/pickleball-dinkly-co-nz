@@ -159,12 +159,7 @@ Deno.serve(async (req: Request) => {
           <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
             ${member.phone_number || "Not provided"}
           </td>
-          <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
-            ${member.pickleball_level}
-          </td>
-          <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
-            ${member.dupr_rating || "N/A"}
-          </td>
+
         </tr>
       `;
     });
@@ -201,8 +196,7 @@ Deno.serve(async (req: Request) => {
                       <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">Name</th>
                       <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">Email</th>
                       <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">Phone</th>
-                      <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">Level</th>
-                      <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">DUPR</th>
+
                     </tr>
                   </thead>
                   <tbody>
