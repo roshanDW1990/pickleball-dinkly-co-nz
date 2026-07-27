@@ -62,14 +62,14 @@ Deno.serve(async (req: Request) => {
               Your account has been successfully created and you can now:
             </p>
             <ul style="margin: 0 0 24px; padding-left: 20px;">
-              <li style="margin-bottom: 8px;">Browse and register for upcoming tournaments</li>
-              <li style="margin-bottom: 8px;">Track your matches and tournament progress</li>
+              <li style="margin-bottom: 8px;">Browse and register for upcoming leagues</li>
+              <li style="margin-bottom: 8px;">Track your matches and leagues progress</li>
               <li style="margin-bottom: 8px;">View league standings and your ranking</li>
               <li style="margin-bottom: 8px;">Connect with other players in your groups</li>
               <li style="margin-bottom: 8px;">Submit match results and scores</li>
             </ul>
             <p style="margin: 0 0 24px;">
-              Get started by logging in to your dashboard and checking out the upcoming tournaments!
+              Get started by logging in to your dashboard and checking out the upcoming leagues!
             </p>
             <p style="margin: 16px 0 0; font-size: 14px; color: #64748b;">
               If you have any questions, feel free to reach out to us. See you on the court!
