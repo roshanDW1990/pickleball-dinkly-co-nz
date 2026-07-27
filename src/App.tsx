@@ -19,6 +19,7 @@ import { StandingsPage } from './pages/StandingsPage';
 import { LeagueStandingsPage } from './pages/LeagueStandingsPage';
 import { ArchivedStandingsPage } from './pages/ArchivedStandingsPage';
 import { MatchHistoryPage } from './pages/MatchHistoryPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { AdminDashboard } from './admin/pages/AdminDashboard';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { useAuth } from './hooks/useAuth';
@@ -53,6 +54,7 @@ function AppContent() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<AuthPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage onComplete={() => navigate('/', { replace: true })} />} />
       <Route path="/about" element={
         <PublicPageLayout user={user} onSignOut={signOut}>
           <AboutPage />
