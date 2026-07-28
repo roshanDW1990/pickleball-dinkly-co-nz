@@ -96,13 +96,11 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
           <div className="bg-gradient-to-r from-green-600 to-emerald-600 h-32"></div>
 
           <div className="px-6 pb-6">
-            <div className="flex items-end -mt-16 mb-6">
-              <div className="w-32 h-32 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+            <div className="-mt-16 mb-6">
+              <div className="w-32 h-32 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg mx-auto sm:mx-0">
                 <UserIcon className="h-16 w-16 text-white" />
               </div>
-              <div className="ml-6 mb-2">
-                <h2 className="text-2xl font-bold text-slate-800">{user.firstName} {user.lastName}</h2>
-              </div>
+              <h2 className="text-2xl font-bold text-slate-800 mt-4 text-center sm:text-left">{user.firstName} {user.lastName}</h2>
             </div>
 
             <div className="space-y-6">
