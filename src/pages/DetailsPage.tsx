@@ -1,9 +1,9 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Header } from '../components/dashboard/Header';
 import { Footer } from '../components/common/Footer';
-import { User as UserIcon, Mail, Phone, TrendingUp, Pencil } from 'lucide-react';
+import { User as UserIcon, Mail, Phone, TrendingUp, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { User } from '../types';
+import { supabase } from '../lib/supabase';
 
 interface DetailsPageProps {
   user: User;
@@ -11,7 +11,63 @@ interface DetailsPageProps {
 }
 
 export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => {
-  const navigate = useNavigate();
+  const [email, setEmail] = useState(user.email);
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber || '');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const emailChanged = email.trim().toLowerCase() !== user.email.toLowerCase();
+  const phoneChanged = phoneNumber.trim() !== (user.phoneNumber || '');
+  const hasChanges = emailChanged || phoneChanged;
+
+  const handleSave = async () => {
+    setError('');
+    setSuccess('');
+    setSaving(true);
+
+    try {
+      if (phoneChanged) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ phone_number: phoneNumber.trim() || null })
+          .eq('id', user.id);
+
+        if (profileError) {
+          throw new Error('Failed to update phone number. Please try again.');
+        }
+      }
+
+      if (emailChanged) {
+        const newEmail = email.trim().toLowerCase();
+        const { error: authError } = await supabase.auth.updateUser({
+          email: newEmail,
+        });
+
+        if (authError) {
+          if (authError.message.includes('already')) {
+            throw new Error('This email address is already in use by another account.');
+          }
+          throw new Error(authError.message);
+        }
+
+        setSuccess(
+          phoneChanged
+            ? 'Phone number updated. A confirmation link has been sent to your new email — click it to complete the change.'
+            : 'A confirmation link has been sent to your new email address. Click it to complete the change.'
+        );
+        setSaving(false);
+        return;
+      }
+
+      setSuccess('Your profile has been updated successfully.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Header user={user} onSignOut={onSignOut} />
@@ -21,6 +77,20 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
           <h1 className="text-3xl font-bold text-slate-800 mb-2">Profile Details</h1>
           <p className="text-slate-600">View and manage your account information</p>
         </div>
+
+        {error && (
+          <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg mb-6">
+            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700">{error}</p>
+          </div>
+        )}
+
+        {success && (
+          <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg mb-6">
+            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-green-700">{success}</p>
+          </div>
+        )}
 
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="bg-gradient-to-r from-green-600 to-emerald-600 h-32"></div>
@@ -32,13 +102,6 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
               </div>
               <div className="ml-6 mb-2">
                 <h2 className="text-2xl font-bold text-slate-800">{user.firstName} {user.lastName}</h2>
-                <button
-                  onClick={() => navigate('/edit-profile')}
-                  className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                  Edit Profile
-                </button>
               </div>
             </div>
 
@@ -59,23 +122,46 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
                 </div>
               </div>
 
+              {/* Editable Email */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-600">Email</label>
-                <div className="flex items-center px-4 py-3 bg-slate-50 rounded-lg border border-slate-200">
-                  <Mail className="h-5 w-5 text-slate-400 mr-3" />
-                  <span className="text-slate-800">{user.email}</span>
+                <label htmlFor="email" className="text-sm font-medium text-slate-600">Email</label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setSuccess(''); setError(''); }}
+                    className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                    placeholder="your@email.com"
+                  />
                 </div>
+                {emailChanged && (
+                  <p className="text-xs text-amber-600 flex items-center gap-1">
+                    <AlertCircle className="h-3.5 w-3.5" />
+                    A confirmation link will be sent to your new email address.
+                  </p>
+                )}
               </div>
 
-              {user.phoneNumber && (
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-600">Mobile Number</label>
-                  <div className="flex items-center px-4 py-3 bg-slate-50 rounded-lg border border-slate-200">
-                    <Phone className="h-5 w-5 text-slate-400 mr-3" />
-                    <span className="text-slate-800">{user.phoneNumber}</span>
-                  </div>
+              {/* Editable Phone */}
+              <div className="space-y-2">
+                <label htmlFor="phone" className="text-sm font-medium text-slate-600">Mobile Number</label>
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                  <input
+                    id="phone"
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => { setPhoneNumber(e.target.value); setSuccess(''); setError(''); }}
+                    className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                    placeholder="+64 21 123 4567"
+                  />
                 </div>
-              )}
+                <p className="text-xs text-slate-500">
+                  Shared with other players in your league group to arrange matches.
+                </p>
+              </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-600">DUPR Rating - Singles</label>
@@ -86,6 +172,20 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
                   </span>
                 </div>
               </div>
+
+              {/* Save button */}
+              {hasChanges && (
+                <div className="pt-4 border-t border-slate-200">
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <Save className="h-4 w-4" />
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

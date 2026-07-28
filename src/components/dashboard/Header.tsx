@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, User, LogOut, ChevronDown, Shield, Settings } from 'lucide-react';
+import { Bell, User, LogOut, ChevronDown, Shield } from 'lucide-react';
 import { DinklyLogo } from '../common/DinklyLogo';
 import { Button } from '../common/Button';
 import { User as UserType } from '../../types';
@@ -91,16 +91,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onSignOut }) => {
                   >
                     Details
                   </button>
-                  <button
-                    className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-150 flex items-center gap-2"
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                      navigate('/edit-profile');
-                    }}
-                  >
-                    <Settings className="h-4 w-4" />
-                    Edit Profile
-                  </button>
+
                   <button
                     className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-150"
                     onClick={() => {
