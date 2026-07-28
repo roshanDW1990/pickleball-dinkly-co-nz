@@ -20,6 +20,7 @@ import { LeagueStandingsPage } from './pages/LeagueStandingsPage';
 import { ArchivedStandingsPage } from './pages/ArchivedStandingsPage';
 import { MatchHistoryPage } from './pages/MatchHistoryPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { EditProfilePage } from './pages/EditProfilePage';
 import { AdminDashboard } from './admin/pages/AdminDashboard';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { useAuth } from './hooks/useAuth';
@@ -113,6 +114,16 @@ function AppContent() {
         element={
           isAuthenticated && user ? (
             <DetailsPage user={user} onSignOut={signOut} />
+          ) : (
+            <AuthPage />
+          )
+        }
+      />
+      <Route
+        path="/edit-profile"
+        element={
+          isAuthenticated && user ? (
+            <EditProfilePage user={user} onSignOut={signOut} />
           ) : (
             <AuthPage />
           )

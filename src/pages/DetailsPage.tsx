@@ -1,7 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/dashboard/Header';
 import { Footer } from '../components/common/Footer';
-import { User as UserIcon, Mail, Phone, TrendingUp } from 'lucide-react';
+import { User as UserIcon, Mail, Phone, TrendingUp, Pencil } from 'lucide-react';
 import { User } from '../types';
 
 interface DetailsPageProps {
@@ -10,6 +11,7 @@ interface DetailsPageProps {
 }
 
 export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Header user={user} onSignOut={onSignOut} />
@@ -30,6 +32,13 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
               </div>
               <div className="ml-6 mb-2">
                 <h2 className="text-2xl font-bold text-slate-800">{user.firstName} {user.lastName}</h2>
+                <button
+                  onClick={() => navigate('/edit-profile')}
+                  className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-green-700 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  Edit Profile
+                </button>
               </div>
             </div>
 
