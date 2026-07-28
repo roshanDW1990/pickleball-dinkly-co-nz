@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Header } from '../components/dashboard/Header';
 import { Footer } from '../components/common/Footer';
-import { User as UserIcon, Mail, Phone, TrendingUp, Save, AlertCircle, CheckCircle } from 'lucide-react';
+import { User as UserIcon, Mail, Phone, TrendingUp, Save, AlertCircle, CheckCircle, Pencil, X } from 'lucide-react';
 import { User } from '../types';
 import { supabase } from '../lib/supabase';
 
@@ -11,6 +11,7 @@ interface DetailsPageProps {
 }
 
 export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => {
+  const [editing, setEditing] = useState(false);
   const [email, setEmail] = useState(user.email);
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber || '');
   const [saving, setSaving] = useState(false);
@@ -20,6 +21,14 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
   const emailChanged = email.trim().toLowerCase() !== user.email.toLowerCase();
   const phoneChanged = phoneNumber.trim() !== (user.phoneNumber || '');
   const hasChanges = emailChanged || phoneChanged;
+
+  const handleCancel = () => {
+    setEditing(false);
+    setEmail(user.email);
+    setPhoneNumber(user.phoneNumber || '');
+    setError('');
+    setSuccess('');
+  };
 
   const handleSave = async () => {
     setError('');
@@ -57,10 +66,12 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
             : 'A confirmation link has been sent to your new email address. Click it to complete the change.'
         );
         setSaving(false);
+        setEditing(false);
         return;
       }
 
       setSuccess('Your profile has been updated successfully.');
+      setEditing(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
@@ -96,11 +107,31 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
           <div className="bg-gradient-to-r from-green-600 to-emerald-600 h-32"></div>
 
           <div className="px-6 pb-6">
-            <div className="-mt-16 mb-6">
-              <div className="w-32 h-32 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg mx-auto sm:mx-0">
-                <UserIcon className="h-16 w-16 text-white" />
+            <div className="-mt-16 mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="w-32 h-32 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg mx-auto sm:mx-0">
+                  <UserIcon className="h-16 w-16 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-800 mt-4 text-center sm:text-left">{user.firstName} {user.lastName}</h2>
               </div>
-              <h2 className="text-2xl font-bold text-slate-800 mt-4 text-center sm:text-left">{user.firstName} {user.lastName}</h2>
+              {!editing && (
+                <button
+                  onClick={() => setEditing(true)}
+                  className="mt-4 sm:mt-0 inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors self-center sm:self-auto"
+                >
+                  <Pencil className="h-4 w-4" />
+                  Edit Profile
+                </button>
+              )}
+              {editing && (
+                <button
+                  onClick={handleCancel}
+                  className="mt-4 sm:mt-0 inline-flex items-center gap-2 px-5 py-2.5 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition-colors self-center sm:self-auto"
+                >
+                  <X className="h-4 w-4" />
+                  Cancel
+                </button>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -120,45 +151,63 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
                 </div>
               </div>
 
-              {/* Editable Email */}
+              {/* Email */}
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium text-slate-600">Email</label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => { setEmail(e.target.value); setSuccess(''); setError(''); }}
-                    className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
-                    placeholder="your@email.com"
-                  />
-                </div>
-                {emailChanged && (
-                  <p className="text-xs text-amber-600 flex items-center gap-1">
-                    <AlertCircle className="h-3.5 w-3.5" />
-                    A confirmation link will be sent to your new email address.
-                  </p>
+                {editing ? (
+                  <>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                      <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => { setEmail(e.target.value); setSuccess(''); setError(''); }}
+                        className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                    {emailChanged && (
+                      <p className="text-xs text-amber-600 flex items-center gap-1">
+                        <AlertCircle className="h-3.5 w-3.5" />
+                        A confirmation link will be sent to your new email address.
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-center px-4 py-3 bg-slate-50 rounded-lg border border-slate-200 gap-3">
+                    <Mail className="h-5 w-5 text-slate-400" />
+                    <span className="text-slate-800">{user.email}</span>
+                  </div>
                 )}
               </div>
 
-              {/* Editable Phone */}
+              {/* Phone */}
               <div className="space-y-2">
                 <label htmlFor="phone" className="text-sm font-medium text-slate-600">Mobile Number</label>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                  <input
-                    id="phone"
-                    type="tel"
-                    value={phoneNumber}
-                    onChange={(e) => { setPhoneNumber(e.target.value); setSuccess(''); setError(''); }}
-                    className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
-                    placeholder="+64 21 123 4567"
-                  />
-                </div>
-                <p className="text-xs text-slate-500">
-                  Shared with other players in your league group to arrange matches.
-                </p>
+                {editing ? (
+                  <>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                      <input
+                        id="phone"
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={(e) => { setPhoneNumber(e.target.value); setSuccess(''); setError(''); }}
+                        className="w-full pl-12 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                        placeholder="+64 21 123 4567"
+                      />
+                    </div>
+                    <p className="text-xs text-slate-500">
+                      Shared with other players in your league group to arrange matches.
+                    </p>
+                  </>
+                ) : (
+                  <div className="flex items-center px-4 py-3 bg-slate-50 rounded-lg border border-slate-200 gap-3">
+                    <Phone className="h-5 w-5 text-slate-400" />
+                    <span className="text-slate-800">{user.phoneNumber || '—'}</span>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -172,7 +221,7 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
               </div>
 
               {/* Save button */}
-              {hasChanges && (
+              {editing && hasChanges && (
                 <div className="pt-4 border-t border-slate-200">
                   <button
                     onClick={handleSave}
