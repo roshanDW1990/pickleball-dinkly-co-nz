@@ -43,13 +43,18 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, refre
 
     try {
       if (phoneChanged) {
-        const { error: profileError } = await supabase
+        const { data, error: profileError } = await supabase
           .from('profiles')
           .update({ phone_number: phoneNumber.trim() || null })
-          .eq('id', user.id);
+          .eq('id', user.id)
+          .select();
 
         if (profileError) {
           throw new Error('Failed to update phone number. Please try again.');
+        }
+
+        if (!data || data.length === 0) {
+          throw new Error('Could not save changes. Please sign out and sign back in, then try again.');
         }
       }
 
@@ -66,6 +71,7 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, refre
           throw new Error(authError.message);
         }
 
+        await refreshProfile();
         setSuccess(
           phoneChanged
             ? 'Phone number updated. A confirmation link has been sent to your new email — click it to complete the change.'
