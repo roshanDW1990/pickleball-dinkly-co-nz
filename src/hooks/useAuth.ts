@@ -289,6 +289,13 @@ export const useAuth = () => {
     });
   }, []);
 
+  const refreshProfile = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await loadUserProfile(session.user.id);
+    }
+  }, []);
+
   return {
     ...authState,
     pendingVerificationEmail,
@@ -297,6 +304,7 @@ export const useAuth = () => {
     signOut,
     verifyEmail,
     resendVerification,
-    sendPasswordResetLink
+    sendPasswordResetLink,
+    refreshProfile
   };
 };

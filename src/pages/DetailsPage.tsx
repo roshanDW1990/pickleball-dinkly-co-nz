@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '../components/dashboard/Header';
 import { Footer } from '../components/common/Footer';
 import { User as UserIcon, Mail, Phone, TrendingUp, Save, AlertCircle, CheckCircle, Pencil, X } from 'lucide-react';
@@ -8,9 +8,10 @@ import { supabase } from '../lib/supabase';
 interface DetailsPageProps {
   user: User;
   onSignOut: () => void;
+  refreshProfile: () => Promise<void>;
 }
 
-export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => {
+export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, refreshProfile }) => {
   const [editing, setEditing] = useState(false);
   const [email, setEmail] = useState(user.email);
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber || '');
@@ -21,6 +22,11 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
   const emailChanged = email.trim().toLowerCase() !== user.email.toLowerCase();
   const phoneChanged = phoneNumber.trim() !== (user.phoneNumber || '');
   const hasChanges = emailChanged || phoneChanged;
+
+  useEffect(() => {
+    setEmail(user.email);
+    setPhoneNumber(user.phoneNumber || '');
+  }, [user.email, user.phoneNumber]);
 
   const handleCancel = () => {
     setEditing(false);
@@ -70,6 +76,7 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
         return;
       }
 
+      await refreshProfile();
       setSuccess('Your profile has been updated successfully.');
       setEditing(false);
     } catch (err) {
