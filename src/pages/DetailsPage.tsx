@@ -103,21 +103,22 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 h-32"></div>
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+          <div className="bg-gradient-to-r from-green-600 to-emerald-600 h-32 rounded-t-xl"></div>
 
           <div className="px-6 pb-6">
-            <div className="-mt-16 mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <div className="w-32 h-32 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg mx-auto sm:mx-0">
-                  <UserIcon className="h-16 w-16 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-slate-800 mt-4 text-center sm:text-left">{user.firstName} {user.lastName}</h2>
+            <div className="-mt-16 mb-4">
+              <div className="w-32 h-32 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg mx-auto sm:mx-0">
+                <UserIcon className="h-16 w-16 text-white" />
               </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2 className="text-2xl font-bold text-slate-800 text-center sm:text-left">{user.firstName} {user.lastName}</h2>
               {!editing && (
                 <button
                   onClick={() => setEditing(true)}
-                  className="mt-4 sm:mt-0 inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors self-center sm:self-auto"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors self-center sm:self-auto"
                 >
                   <Pencil className="h-4 w-4" />
                   Edit Profile
@@ -126,7 +127,7 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
               {editing && (
                 <button
                   onClick={handleCancel}
-                  className="mt-4 sm:mt-0 inline-flex items-center gap-2 px-5 py-2.5 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition-colors self-center sm:self-auto"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition-colors self-center sm:self-auto"
                 >
                   <X className="h-4 w-4" />
                   Cancel
