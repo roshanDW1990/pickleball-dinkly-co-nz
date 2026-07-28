@@ -19,6 +19,24 @@ interface RequestBody {
   groupId: string;
   groupName: string;
   tournamentName: string;
+  tournamentId: string;
+}
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr + "T00:00:00");
+  return date.toLocaleDateString("en-NZ", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function getMidpointDate(startStr: string, endStr: string): string {
+  const start = new Date(startStr + "T00:00:00");
+  const end = new Date(endStr + "T00:00:00");
+  const mid = new Date(start.getTime() + (end.getTime() - start.getTime()) / 2);
+  return mid.toISOString().split("T")[0];
 }
 
 Deno.serve(async (req: Request) => {
@@ -30,7 +48,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { groupId, groupName, tournamentName }: RequestBody = await req.json();
+    const { groupId, groupName, tournamentName, tournamentId }: RequestBody = await req.json();
 
     if (!groupId || !groupName || !tournamentName) {
       return new Response(
@@ -108,6 +126,32 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    // Fetch tournament dates
+    let startDate = "";
+    let endDate = "";
+    let midpointDate = "";
+
+    if (tournamentId) {
+      const tournamentResponse = await fetch(
+        `${supabaseUrl}/rest/v1/tournaments?id=eq.${tournamentId}&select=start_date,end_date`,
+        {
+          headers: {
+            apikey: Deno.env.get("SUPABASE_ANON_KEY")!,
+            Authorization: `Bearer ${supabaseServiceKey}`,
+          },
+        }
+      );
+
+      const tournamentData = await tournamentResponse.json();
+      if (tournamentData && tournamentData.length > 0) {
+        startDate = tournamentData[0].start_date || "";
+        endDate = tournamentData[0].end_date || "";
+        if (startDate && endDate) {
+          midpointDate = getMidpointDate(startDate, endDate);
+        }
+      }
+    }
+
     const membersResponse = await fetch(
       `${supabaseUrl}/rest/v1/group_members?group_id=eq.${groupId}&select=user_id`,
       {
@@ -159,10 +203,33 @@ Deno.serve(async (req: Request) => {
           <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
             ${member.phone_number || "Not provided"}
           </td>
-
         </tr>
       `;
     });
+
+    // Build dates section for the email
+    let datesHtml = "";
+    if (startDate && endDate) {
+      datesHtml = `
+        <div style="margin: 20px 0; padding: 16px; background-color: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0;">
+          <h3 style="margin: 0 0 12px; font-size: 16px; color: #166534;">League Dates</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 6px 0; font-weight: 600; color: #334155; width: 120px;">Start Date:</td>
+              <td style="padding: 6px 0; color: #334155;">${formatDate(startDate)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; font-weight: 600; color: #334155;">Midpoint:</td>
+              <td style="padding: 6px 0; color: #334155;">${formatDate(midpointDate)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; font-weight: 600; color: #334155;">End Date:</td>
+              <td style="padding: 6px 0; color: #334155;">${formatDate(endDate)}</td>
+            </tr>
+          </table>
+        </div>
+      `;
+    }
 
     const emailsSent = [];
     const emailsFailed = [];
@@ -185,6 +252,7 @@ Deno.serve(async (req: Request) => {
               <p style="margin: 0 0 16px;">
                 You've been placed in <strong>${groupName}</strong> for <strong>${tournamentName}</strong>.
               </p>
+              ${datesHtml}
               <p style="margin: 0 0 16px;">
                 Below is the contact information for all players in your group. Please reach out to schedule your matches!
               </p>
@@ -196,7 +264,6 @@ Deno.serve(async (req: Request) => {
                       <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">Name</th>
                       <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">Email</th>
                       <th style="padding: 12px; text-align: left; border-bottom: 2px solid #cbd5e1;">Phone</th>
-
                     </tr>
                   </thead>
                   <tbody>

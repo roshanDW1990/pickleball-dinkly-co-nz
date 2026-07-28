@@ -364,6 +364,7 @@ export const GroupsManagement: React.FC = () => {
           groupId,
           groupName,
           tournamentName: tournament.name,
+          tournamentId: tournament.id,
         }),
       });
 
