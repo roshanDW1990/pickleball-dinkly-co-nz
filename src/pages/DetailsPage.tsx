@@ -18,6 +18,10 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, refre
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [pendingEmail, setPendingEmail] = useState<string | null>(() => {
+    const stored = localStorage.getItem(`pending_email_${user.id}`);
+    return stored || null;
+  });
 
   const emailChanged = email.trim().toLowerCase() !== user.email.toLowerCase();
   const phoneChanged = phoneNumber.trim() !== (user.phoneNumber || '');
@@ -27,6 +31,13 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, refre
     setEmail(user.email);
     setPhoneNumber(user.phoneNumber || '');
   }, [user.email, user.phoneNumber]);
+
+  useEffect(() => {
+    if (pendingEmail && user.email.toLowerCase() === pendingEmail.toLowerCase()) {
+      setPendingEmail(null);
+      localStorage.removeItem(`pending_email_${user.id}`);
+    }
+  }, [user.email, pendingEmail, user.id]);
 
   const handleCancel = () => {
     setEditing(false);
@@ -71,6 +82,8 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, refre
           throw new Error(authError.message);
         }
 
+        setPendingEmail(newEmail);
+        localStorage.setItem(`pending_email_${user.id}`, newEmail);
         await refreshProfile();
         setSuccess(
           phoneChanged
@@ -189,9 +202,19 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, refre
                     )}
                   </>
                 ) : (
-                  <div className="flex items-center px-4 py-3 bg-slate-50 rounded-lg border border-slate-200 gap-3">
-                    <Mail className="h-5 w-5 text-slate-400" />
-                    <span className="text-slate-800">{user.email}</span>
+                  <div className="space-y-2">
+                    <div className="flex items-center px-4 py-3 bg-slate-50 rounded-lg border border-slate-200 gap-3">
+                      <Mail className="h-5 w-5 text-slate-400" />
+                      <span className="text-slate-800">{user.email}</span>
+                    </div>
+                    {pendingEmail && (
+                      <div className="flex items-start gap-2 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-lg">
+                        <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                        <p className="text-sm text-amber-800">
+                          Pending change to <span className="font-medium">{pendingEmail}</span> — check your inbox and click the confirmation link to complete the switch.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
