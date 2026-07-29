@@ -160,7 +160,7 @@ export const RulesAndRegulationsPage: React.FC = () => {
               </li>
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
-                <span><strong>Retiring player:</strong> 1 participation point + 1 point for each set won</span>
+                <span><strong>Retiring player:</strong> 1 participation point</span>
               </li>
             </ul>
             <p className="mt-3 text-sm">In the event of disagreement, the score recorded will be the score at the time play stopped.</p>
