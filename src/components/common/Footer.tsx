@@ -182,9 +182,6 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} Dinkly. All rights reserved. Built with passion for pickleball players everywhere.
           </div>
           <div className="flex space-x-6 text-sm">
-            <Link to="/accessibility" className="text-slate-400 hover:text-green-400 transition-colors duration-200">
-              Accessibility
-            </Link>
             <Link to="/cookies" className="text-slate-400 hover:text-green-400 transition-colors duration-200">
               Cookie Policy
             </Link>
