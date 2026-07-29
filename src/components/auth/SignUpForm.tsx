@@ -40,7 +40,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, loading, onSwi
     setError('');
 
     if (!agreedToTerms) {
-      setError('You must agree to the Terms of Service, Rules and Regulations, Code of Conduct, and Privacy Policy');
+      setError('You must agree to the Terms of Service, Rules and Regulations, Code of Conduct, Privacy Policy, and Refund & Cancellation Policy');
       return;
     }
 
@@ -274,9 +274,13 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, loading, onSwi
                 <Link to="/code-of-conduct" target="_blank" className="text-green-600 hover:text-green-700 underline font-medium">
                   Code of Conduct
                 </Link>
-                , and{' '}
+                ,{' '}
                 <Link to="/privacy-policy" target="_blank" className="text-green-600 hover:text-green-700 underline font-medium">
                   Privacy Policy
+                </Link>
+                , and{' '}
+                <Link to="/refund-policy" target="_blank" className="text-green-600 hover:text-green-700 underline font-medium">
+                  Refund & Cancellation Policy
                 </Link>
                 .
               </label>
