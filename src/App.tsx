@@ -15,6 +15,7 @@ import { RulesAndRegulationsPage } from './pages/RulesAndRegulationsPage';
 import { CodeOfConductPage } from './pages/CodeOfConductPage';
 import { TermsOfServicePage } from './pages/TermsOfServicePage';
 import { CookiesPolicyPage } from './pages/CookiesPolicyPage';
+import { RefundPolicyPage } from './pages/RefundPolicyPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { StandingsPage } from './pages/StandingsPage';
 import { LeagueStandingsPage } from './pages/LeagueStandingsPage';
@@ -99,6 +100,11 @@ function AppContent() {
       <Route path="/cookies" element={
         <PublicPageLayout user={user} onSignOut={signOut}>
           <CookiesPolicyPage />
+        </PublicPageLayout>
+      } />
+      <Route path="/refund-policy" element={
+        <PublicPageLayout user={user} onSignOut={signOut}>
+          <RefundPolicyPage />
         </PublicPageLayout>
       } />
       <Route

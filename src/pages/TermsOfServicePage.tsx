@@ -128,7 +128,7 @@ export const TermsOfServicePage: React.FC = () => {
           <ul className="space-y-3">
             <li className="flex items-start">
               <span className="text-blue-600 mr-2">•</span>
-              <span>League entry fees are used to fund league administration, scheduling, and player services. Fees are generally non-refundable once a league has commenced or player groups have been organised. Refund requests received before the league start date will be considered on a case-by-case basis, subject to our Refund Policy and applicable laws.</span>
+              <span>League entry fees are used to fund league administration, scheduling, and player services. Fees are generally non-refundable once a league has commenced or player groups have been organised. Refund requests received before the league start date will be considered on a case-by-case basis, subject to our <Link to="/refund-policy" className="text-blue-600 hover:text-blue-700 underline">Refund Policy</Link> and applicable laws.</span>
             </li>
             <li className="flex items-start">
               <span className="text-blue-600 mr-2">•</span>
@@ -248,7 +248,7 @@ export const TermsOfServicePage: React.FC = () => {
             </li>
           </ul>
           <p className="font-semibold text-sm bg-amber-50 border border-amber-200 rounded p-3">
-            Termination may occur without refund and without notice where justified.
+            Termination may occur <Link to="/refund-policy" className="text-blue-600 hover:text-blue-700 underline">without refund</Link> and without notice where justified.
           </p>
         </Section>
 
