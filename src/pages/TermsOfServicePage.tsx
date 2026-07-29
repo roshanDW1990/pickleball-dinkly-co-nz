@@ -128,7 +128,7 @@ export const TermsOfServicePage: React.FC = () => {
           <ul className="space-y-3">
             <li className="flex items-start">
               <span className="text-blue-600 mr-2">•</span>
-              <span>League entry fees are self-funded and non-refundable except where required by law.</span>
+              <span>League entry fees are used to fund league administration, scheduling, and player services. Fees are generally non-refundable once a league has commenced or player groups have been organised. Refund requests received before the league start date will be considered on a case-by-case basis, subject to our Refund Policy and applicable laws.</span>
             </li>
             <li className="flex items-start">
               <span className="text-blue-600 mr-2">•</span>
