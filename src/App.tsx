@@ -14,6 +14,7 @@ import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { RulesAndRegulationsPage } from './pages/RulesAndRegulationsPage';
 import { CodeOfConductPage } from './pages/CodeOfConductPage';
 import { TermsOfServicePage } from './pages/TermsOfServicePage';
+import { CookiesPolicyPage } from './pages/CookiesPolicyPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { StandingsPage } from './pages/StandingsPage';
 import { LeagueStandingsPage } from './pages/LeagueStandingsPage';
@@ -93,6 +94,11 @@ function AppContent() {
       <Route path="/terms-of-service" element={
         <PublicPageLayout user={user} onSignOut={signOut}>
           <TermsOfServicePage />
+        </PublicPageLayout>
+      } />
+      <Route path="/cookies" element={
+        <PublicPageLayout user={user} onSignOut={signOut}>
+          <CookiesPolicyPage />
         </PublicPageLayout>
       } />
       <Route
