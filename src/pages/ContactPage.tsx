@@ -78,28 +78,9 @@ export const ContactPage: React.FC = () => {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Information */}
-          <div className="lg:col-span-1">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8 sticky top-8">
-              <h2 className="text-2xl font-bold text-slate-800 mb-6">Contact Information</h2>
-              
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="bg-green-100 p-3 rounded-lg mr-4 flex-shrink-0">
-                    <Mail className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-800 mb-1">Email Us</h3>
-                    <p className="text-slate-600">hello@dinkly.co.nz</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div className="grid grid-cols-1 gap-12">
           {/* Contact Form */}
-          <div className="lg:col-span-2">
+          <div className="max-w-3xl mx-auto w-full">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Send Us a Message</h2>
               
