@@ -126,13 +126,15 @@ Deno.serve(async (req: Request) => {
       active: true,
     });
 
-    if (existingPrices.data.length > 0) {
-      price = existingPrices.data[0];
+    const nzdPrice = existingPrices.data.find(p => p.currency === "nzd" && p.unit_amount === Math.round(tournament.entry_fee * 100));
+
+    if (nzdPrice) {
+      price = nzdPrice;
     } else {
       price = await stripe.prices.create({
         product: product.id,
         unit_amount: Math.round(tournament.entry_fee * 100),
-        currency: "usd",
+        currency: "nzd",
       });
     }
 
