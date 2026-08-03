@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
-import { Mail, Lock, User, Eye, EyeOff, Phone } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Mail, Lock, User, Eye, EyeOff, Phone, Check, Circle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../common/Button';
 import { LocationAutocomplete } from '../common/LocationAutocomplete';
 import { User as UserType } from '../../types';
+
+const PASSWORD_RULES = [
+  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
+  { label: 'One uppercase letter (A-Z)', test: (p: string) => /[A-Z]/.test(p) },
+  { label: 'One lowercase letter (a-z)', test: (p: string) => /[a-z]/.test(p) },
+  { label: 'One number (0-9)', test: (p: string) => /[0-9]/.test(p) },
+  { label: 'One special character (!@#$%^&*...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
 
 interface SignUpFormProps {
   onSignUp: (userData: Partial<UserType>, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -49,8 +57,9 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, loading, onSwi
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    const failedRules = PASSWORD_RULES.filter(rule => !rule.test(formData.password));
+    if (failedRules.length > 0) {
+      setError('Please meet all password requirements before continuing');
       return;
     }
 
@@ -180,6 +189,27 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp, loading, onSwi
               </div>
             </div>
           </div>
+
+          {formData.password.length > 0 && (
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p className="text-xs font-semibold text-slate-700 mb-2">Password requirements:</p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                {PASSWORD_RULES.map((rule) => {
+                  const passed = rule.test(formData.password);
+                  return (
+                    <li key={rule.label} className={`flex items-center text-xs gap-1.5 ${passed ? 'text-green-600' : 'text-slate-500'}`}>
+                      {passed ? <Check className="h-3.5 w-3.5 flex-shrink-0" /> : <Circle className="h-3 w-3 flex-shrink-0" />}
+                      {rule.label}
+                    </li>
+                  );
+                })}
+                <li className={`flex items-center text-xs gap-1.5 ${formData.password === formData.confirmPassword && formData.confirmPassword.length > 0 ? 'text-green-600' : 'text-slate-500'}`}>
+                  {formData.password === formData.confirmPassword && formData.confirmPassword.length > 0 ? <Check className="h-3.5 w-3.5 flex-shrink-0" /> : <Circle className="h-3 w-3 flex-shrink-0" />}
+                  Passwords match
+                </li>
+              </ul>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

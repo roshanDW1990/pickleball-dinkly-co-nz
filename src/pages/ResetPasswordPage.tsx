@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { Lock, Eye, EyeOff, Check, ShieldCheck } from 'lucide-react';
+import { Lock, Eye, EyeOff, Check, ShieldCheck, Circle } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { supabase } from '../lib/supabase';
+
+const PASSWORD_RULES = [
+  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
+  { label: 'One uppercase letter (A-Z)', test: (p: string) => /[A-Z]/.test(p) },
+  { label: 'One lowercase letter (a-z)', test: (p: string) => /[a-z]/.test(p) },
+  { label: 'One number (0-9)', test: (p: string) => /[0-9]/.test(p) },
+  { label: 'One special character (!@#$%^&*...)', test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
 
 export const ResetPasswordPage: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [password, setPassword] = useState('');
@@ -16,8 +24,9 @@ export const ResetPasswordPage: React.FC<{ onComplete: () => void }> = ({ onComp
     e.preventDefault();
     setError('');
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters');
+    const failedRules = PASSWORD_RULES.filter(rule => !rule.test(password));
+    if (failedRules.length > 0) {
+      setError('Please meet all password requirements before continuing');
       return;
     }
 
@@ -76,7 +85,7 @@ export const ResetPasswordPage: React.FC<{ onComplete: () => void }> = ({ onComp
             </div>
             <h2 className="text-2xl font-bold text-slate-800 mb-2">Set New Password</h2>
             <p className="text-slate-600">
-              Enter your new password below. Make sure it's at least 8 characters long.
+              Enter your new password below.
             </p>
           </div>
 
@@ -142,17 +151,26 @@ export const ResetPasswordPage: React.FC<{ onComplete: () => void }> = ({ onComp
             </Button>
           </form>
 
-          <div className="mt-6 bg-slate-50 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-slate-700 mb-1">Password requirements:</h4>
-            <ul className="text-xs text-slate-600 space-y-1">
-              <li className={password.length >= 8 ? 'text-green-600 font-medium' : ''}>
-                {password.length >= 8 ? '✓' : '•'} At least 8 characters
-              </li>
-              <li className={password === confirmPassword && confirmPassword.length > 0 ? 'text-green-600 font-medium' : ''}>
-                {password === confirmPassword && confirmPassword.length > 0 ? '✓' : '•'} Passwords match
-              </li>
-            </ul>
-          </div>
+          {password.length > 0 && (
+            <div className="mt-6 bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p className="text-xs font-semibold text-slate-700 mb-2">Password requirements:</p>
+              <ul className="space-y-1">
+                {PASSWORD_RULES.map((rule) => {
+                  const passed = rule.test(password);
+                  return (
+                    <li key={rule.label} className={`flex items-center text-xs gap-1.5 ${passed ? 'text-green-600' : 'text-slate-500'}`}>
+                      {passed ? <Check className="h-3.5 w-3.5 flex-shrink-0" /> : <Circle className="h-3 w-3 flex-shrink-0" />}
+                      {rule.label}
+                    </li>
+                  );
+                })}
+                <li className={`flex items-center text-xs gap-1.5 ${password === confirmPassword && confirmPassword.length > 0 ? 'text-green-600' : 'text-slate-500'}`}>
+                  {password === confirmPassword && confirmPassword.length > 0 ? <Check className="h-3.5 w-3.5 flex-shrink-0" /> : <Circle className="h-3 w-3 flex-shrink-0" />}
+                  Passwords match
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
