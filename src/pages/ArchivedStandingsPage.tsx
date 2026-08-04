@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PublicPageHeader } from '../components/common/PublicPageHeader';
 import { Footer } from '../components/common/Footer';
-import { Trophy, ArrowRight, Calendar, Users, Trash2 } from 'lucide-react';
+import { Trophy, ArrowRight, Calendar, Users, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { User } from '../types';
 import { supabase } from '../lib/supabase';
 import { useToast } from '../components/common/Toast';
@@ -29,6 +29,11 @@ export const ArchivedStandingsPage: React.FC<ArchivedStandingsPageProps> = ({ us
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 10;
+
+  const totalPages = Math.ceil(leagues.length / PAGE_SIZE);
+  const paginated = leagues.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   useEffect(() => {
     checkAdminStatus();
@@ -101,6 +106,7 @@ export const ArchivedStandingsPage: React.FC<ArchivedStandingsPageProps> = ({ us
       if (error) throw error;
 
       setLeagues(leagues.filter(l => l.id !== leagueId));
+      setCurrentPage(1);
     } catch (error) {
       console.error('Error deleting league:', error);
       toast('Failed to delete league. Please try again.', 'error');
@@ -165,8 +171,9 @@ export const ArchivedStandingsPage: React.FC<ArchivedStandingsPageProps> = ({ us
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"></div>
           </div>
         ) : leagues.length > 0 ? (
+          <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {leagues.map(league => (
+            {paginated.map(league => (
               <div
                 key={league.id}
                 className="bg-white rounded-xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-all duration-300"
@@ -228,6 +235,46 @@ export const ArchivedStandingsPage: React.FC<ArchivedStandingsPageProps> = ({ us
               </div>
             ))}
           </div>
+
+          {totalPages > 1 && (
+            <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <p className="text-sm text-slate-500">
+                Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, leagues.length)} of {leagues.length} leagues
+              </p>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`min-w-[32px] h-8 px-2 rounded-lg text-sm font-medium transition-colors ${
+                      page === currentPage
+                        ? 'bg-slate-600 text-white'
+                        : 'text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  aria-label="Next page"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+          </>
         ) : (
           <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-12 text-center">
             <Trophy className="h-16 w-16 text-slate-300 mx-auto mb-4" />
