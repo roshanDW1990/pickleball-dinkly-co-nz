@@ -151,18 +151,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
   };
 
   const handleDelete = async (id: string, isArchived = false) => {
-    const message = isArchived
-      ? 'WARNING: Deleting an archived league will permanently erase ALL its matches and match results.\n\nThis will recalculate every player\'s win/loss record and remove any wins or losses earned in this league.\n\nThis cannot be undone.\n\nType DELETE to confirm:'
-      : 'Are you sure you want to delete this league? This will also delete all its matches and player results. This cannot be undone.';
-
     if (isArchived) {
-      const confirmation = prompt(message);
-      if (confirmation !== 'DELETE') return;
+      if (!confirm('Delete this archived league?\n\nAll player stats and match history will be preserved — only the league itself (groups and registrations) will be removed.')) return;
     } else {
-      if (!confirm(message)) return;
+      if (!confirm('Are you sure you want to delete this league? This will also delete all its matches and player results. This cannot be undone.')) return;
     }
 
     try {
+      if (!isArchived) {
+        const { data: matches } = await supabase
+          .from('matches')
+          .select('id')
+          .eq('tournament_id', id);
+
+        if (matches && matches.length > 0) {
+          const matchIds = matches.map(m => m.id);
+          await supabase.from('match_results').delete().in('match_id', matchIds);
+          await supabase.from('matches').delete().in('id', matchIds);
+        }
+      }
+
       const { error } = await supabase
         .from('tournaments')
         .delete()

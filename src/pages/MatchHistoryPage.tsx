@@ -14,7 +14,7 @@ interface MatchHistoryPageProps {
 interface MatchHistoryEntry {
   resultId: string;
   matchId: string;
-  tournamentId: string;
+  tournamentId: string | null;
   tournamentName: string;
   dateCompleted: string | null;
   opponentName: string;
@@ -45,7 +45,10 @@ export const MatchHistoryPage: React.FC<MatchHistoryPageProps> = ({ user, onSign
     if (selectedTournament === 'all') {
       setFiltered(history);
     } else {
-      setFiltered(history.filter(h => h.tournamentId === selectedTournament));
+      setFiltered(history.filter(h => {
+        const key = h.tournamentId || `name:${h.tournamentName}`;
+        return key === selectedTournament;
+      }));
     }
     setCurrentPage(1);
   }, [selectedTournament, history]);
@@ -58,6 +61,7 @@ export const MatchHistoryPage: React.FC<MatchHistoryPageProps> = ({ user, onSign
       .select(`
         id,
         tournament_id,
+        league_name,
         player1_id,
         player2_id,
         tournament:tournament_id (name),
@@ -108,11 +112,13 @@ export const MatchHistoryPage: React.FC<MatchHistoryPageProps> = ({ user, onSign
       const oppSet2 = isPlayer1 ? r.player2_set2_score : r.player1_set2_score;
       const oppSet3 = isPlayer1 ? r.player2_set3_score : r.player1_set3_score;
 
+      const resolvedName = (match.tournament as any)?.name || match.league_name || 'Unknown League';
+
       return {
         resultId: r.id,
         matchId: match.id,
         tournamentId: match.tournament_id,
-        tournamentName: (match.tournament as any)?.name ?? 'Unknown Tournament',
+        tournamentName: resolvedName,
         dateCompleted: r.date_completed,
         opponentName,
         mySet1,
@@ -131,9 +137,10 @@ export const MatchHistoryPage: React.FC<MatchHistoryPageProps> = ({ user, onSign
     const seen = new Set<string>();
     const uniqueTournaments: { id: string; name: string }[] = [];
     for (const e of entries) {
-      if (!seen.has(e.tournamentId)) {
-        seen.add(e.tournamentId);
-        uniqueTournaments.push({ id: e.tournamentId, name: e.tournamentName });
+      const key = e.tournamentId || `name:${e.tournamentName}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        uniqueTournaments.push({ id: key, name: e.tournamentName });
       }
     }
     setTournaments(uniqueTournaments);
