@@ -30,7 +30,7 @@ export const ArchivedStandingsPage: React.FC<ArchivedStandingsPageProps> = ({ us
   const [isAdmin, setIsAdmin] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 9;
 
   const totalPages = Math.ceil(leagues.length / PAGE_SIZE);
   const paginated = leagues.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
