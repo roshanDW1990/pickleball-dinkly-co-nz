@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, CreditCard as Edit2, Trash2, Save, X, Trophy, LogOut, Check, Archive, Users, Target, Clock } from 'lucide-react';
+import { Plus, CreditCard as Edit2, Trash2, Save, X, Trophy, LogOut, Check, Archive, ArchiveRestore, Users, Target, Clock } from 'lucide-react';
 import { DinklyLogo } from '../../components/common/DinklyLogo';
 import { Button } from '../../components/common/Button';
 import { supabase } from '../../lib/supabase';
@@ -61,7 +61,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
   const [formData, setFormData] = useState<Tournament>(initialFormState);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'pending' | 'approved'>('pending');
+  const [activeTab, setActiveTab] = useState<'pending' | 'approved' | 'archived'>('pending');
   const [viewingRegistrations, setViewingRegistrations] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
@@ -201,6 +201,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
     }
   };
 
+  const handleUnarchive = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('tournaments')
+        .update({ archived: false })
+        .eq('id', id);
+
+      if (error) throw error;
+      fetchTournaments();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to restore tournament');
+    }
+  };
+
   const fetchRegistrations = async (tournamentId: string) => {
     try {
       setLoadingRegistrations(true);
@@ -251,6 +265,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
 
   const pendingTournaments = tournaments.filter(t => t.status === 'Pending' && !t.archived);
   const approvedTournaments = tournaments.filter(t => t.status === 'Approved' && !t.archived);
+  const archivedTournaments = tournaments.filter(t => t.archived);
 
   if (loading) {
     return (
@@ -542,6 +557,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
               >
                 Approved Tournaments ({approvedTournaments.length})
               </button>
+              <button
+                onClick={() => setActiveTab('archived')}
+                className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
+                  activeTab === 'archived'
+                    ? 'bg-slate-100 text-slate-700 border-b-2 border-slate-600'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Archived ({archivedTournaments.length})
+              </button>
             </div>
 
             <div className="p-6">
@@ -558,7 +583,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                   </div>
                 )}
 
-                {(activeTab === 'pending' ? pendingTournaments : approvedTournaments).map((tournament) => (
+                {activeTab === 'archived' && archivedTournaments.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-slate-600 text-lg">No archived leagues</p>
+                  </div>
+                )}
+
+                {(activeTab === 'pending'
+                  ? pendingTournaments
+                  : activeTab === 'approved'
+                  ? approvedTournaments
+                  : archivedTournaments
+                ).map((tournament) => (
                   <div
                     key={tournament.id}
                     className="bg-slate-50 rounded-lg p-6 border border-slate-200 hover:shadow-md transition-shadow"
@@ -593,13 +629,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                                 <Archive className="h-5 w-5" />
                               </button>
                             )}
-                            <button
-                              onClick={() => handleEdit(tournament)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                              title="Edit League"
-                            >
-                              <Edit2 className="h-5 w-5" />
-                            </button>
+                            {activeTab === 'archived' && (
+                              <button
+                                onClick={() => handleUnarchive(tournament.id!)}
+                                className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                title="Restore League"
+                              >
+                                <ArchiveRestore className="h-5 w-5" />
+                              </button>
+                            )}
+                            {activeTab !== 'archived' && (
+                              <button
+                                onClick={() => handleEdit(tournament)}
+                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="Edit League"
+                              >
+                                <Edit2 className="h-5 w-5" />
+                              </button>
+                            )}
                             <button
                               onClick={() => handleDelete(tournament.id!)}
                               className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -646,6 +693,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                               <Users className="h-4 w-4" />
                               <span>View Registrations ({tournament.current_participants || 0})</span>
                             </Button>
+                          </div>
+                        )}
+
+                        {activeTab === 'archived' && (
+                          <div className="pt-4 border-t border-slate-200">
+                            <p className="text-sm text-slate-500">
+                              This league is archived. Restore it to make it active again, or delete it permanently.
+                            </p>
                           </div>
                         )}
                       </div>
