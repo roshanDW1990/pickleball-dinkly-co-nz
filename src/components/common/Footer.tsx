@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, Facebook } from 'lucide-react';
+import { Instagram, Facebook, Linkedin } from 'lucide-react';
 import { DinklyLogo } from './DinklyLogo';
 import { Link } from 'react-router-dom';
 
@@ -40,6 +40,16 @@ export const Footer: React.FC = () => {
                 aria-label="Like us on Facebook"
               >
                 <Facebook className="h-5 w-5" />
+              </a>
+
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-slate-700 p-2 rounded-lg hover:bg-blue-800 transition-all duration-300 transform hover:scale-110"
+                aria-label="Connect with us on LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
