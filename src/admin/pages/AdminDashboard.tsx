@@ -150,8 +150,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
     setIsFormOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this league?')) return;
+  const handleDelete = async (id: string, isArchived = false) => {
+    const message = isArchived
+      ? 'WARNING: Deleting an archived league will permanently erase ALL its matches and match results.\n\nThis will recalculate every player\'s win/loss record and remove any wins or losses earned in this league.\n\nThis cannot be undone.\n\nType DELETE to confirm:'
+      : 'Are you sure you want to delete this league? This will also delete all its matches and player results. This cannot be undone.';
+
+    if (isArchived) {
+      const confirmation = prompt(message);
+      if (confirmation !== 'DELETE') return;
+    } else {
+      if (!confirm(message)) return;
+    }
 
     try {
       const { error } = await supabase
@@ -648,7 +657,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                               </button>
                             )}
                             <button
-                              onClick={() => handleDelete(tournament.id!)}
+                              onClick={() => handleDelete(tournament.id!, activeTab === 'archived')}
                               className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                               title="Delete League"
                             >
