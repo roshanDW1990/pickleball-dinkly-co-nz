@@ -181,10 +181,10 @@ export const CookiesPolicyPage: React.FC = () => {
             <p className="font-semibold text-slate-800">
               Email:{' '}
               <a
-                href="mailto:hello@dinkly.co.nz"
+                href="mailto:dinklynz@gmail.com"
                 className="text-green-600 hover:text-green-700 underline"
               >
-                hello@dinkly.co.nz
+                dinklynz@gmail.com
               </a>
             </p>
           </div>
