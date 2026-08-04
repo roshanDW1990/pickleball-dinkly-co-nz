@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
               </div>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mb-4">
-              Building the ultimate platform for pickleball enthusiasts to connect, compete, and grow together in local communities worldwide.
+              Building the ultimate platform for pickleball enthusiasts to connect, compete, and grow together in local communities.
             </p>
             <div className="flex space-x-4">
               <a 
