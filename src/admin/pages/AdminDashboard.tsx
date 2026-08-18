@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, CreditCard as Edit2, Trash2, Save, X, Trophy, LogOut, Check, Archive, ArchiveRestore, Users, Target, Clock } from 'lucide-react';
+import { Plus, CreditCard as Edit2, Trash2, Save, X, Trophy, LogOut, Check, Archive, ArchiveRestore, Users, Target, Clock, UserCircle } from 'lucide-react';
 import { DinklyLogo } from '../../components/common/DinklyLogo';
 import { Button } from '../../components/common/Button';
 import { supabase } from '../../lib/supabase';
@@ -7,6 +7,7 @@ import { User } from '../../types';
 import { GroupsManagement } from './GroupsManagement';
 import { MatchesManagement } from './MatchesManagement';
 import { ResultsApproval } from './ResultsApproval';
+import { MembersManagement } from './MembersManagement';
 
 interface Tournament {
   id?: string;
@@ -65,7 +66,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
   const [viewingRegistrations, setViewingRegistrations] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
-  const [mainView, setMainView] = useState<'tournaments' | 'groups' | 'matches' | 'results'>('tournaments');
+  const [mainView, setMainView] = useState<'tournaments' | 'groups' | 'matches' | 'results' | 'members'>('tournaments');
 
   useEffect(() => {
     fetchTournaments();
@@ -372,12 +373,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                 <Clock className="h-4 w-4" />
                 Results
               </button>
+              <button
+                onClick={() => setMainView('members')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                  mainView === 'members'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
+                }`}
+              >
+                <UserCircle className="h-4 w-4" />
+                Members
+              </button>
             </div>
           </div>
 
           {mainView === 'groups' && <GroupsManagement />}
           {mainView === 'matches' && <MatchesManagement />}
           {mainView === 'results' && <ResultsApproval />}
+          {mainView === 'members' && <MembersManagement />}
 
           {mainView === 'tournaments' && (
             <>
