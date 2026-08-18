@@ -15,7 +15,7 @@ interface RequestBody {
   createdAt?: string | null;
 }
 
-const ADMIN_EMAIL = Deno.env.get("ADMIN_NOTIFICATION_EMAIL") || "admin@dinkly.co.nz";
+const ADMIN_EMAIL = Deno.env.get("ADMIN_NOTIFICATION_EMAIL") || "dinklynz@gmail.com";
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
