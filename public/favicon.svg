@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <radialGradient id="ball" cx="37%" cy="32%" r="65%">
+      <stop offset="0" stop-color="#bbf7d0"/>
+      <stop offset=".28" stop-color="#22c55e"/>
+      <stop offset=".65" stop-color="#16a34a"/>
+      <stop offset="1" stop-color="#14532d"/>
+    </radialGradient>
+    <radialGradient id="hole" cx="38%" cy="28%" r="62%">
+      <stop offset="0" stop-color="#1a3d1a"/>
+      <stop offset="1" stop-color="#020a02"/>
+    </radialGradient>
+    <clipPath id="clip"><circle cx="100" cy="100" r="62"/></clipPath>
+  </defs>
+  <rect width="200" height="200" rx="40" fill="#22c55e"/>
+  <circle cx="100" cy="100" r="64" fill="url(#ball)" stroke="#0d4d1f" stroke-width="1.8"/>
+  <g clip-path="url(#clip)" fill="url(#hole)">
+    <g>
+      <circle cx="74" cy="48" r="6"/><circle cx="100" cy="44" r="6"/><circle cx="126" cy="48" r="6"/>
+      <circle cx="58" cy="67" r="6"/><circle cx="84" cy="63" r="6"/><circle cx="116" cy="63" r="6"/><circle cx="142" cy="67" r="6"/>
+      <circle cx="46" cy="88" r="6"/><circle cx="72" cy="84" r="6"/><circle cx="100" cy="82" r="6"/><circle cx="128" cy="84" r="6"/><circle cx="154" cy="88" r="6"/>
+      <circle cx="42" cy="108" r="6"/><circle cx="68" cy="104" r="6"/><circle cx="97" cy="103" r="6"/><circle cx="126" cy="104" r="6"/><circle cx="154" cy="109" r="6"/>
+      <circle cx="54" cy="127" r="6"/><circle cx="80" cy="123" r="6"/><circle cx="108" cy="122" r="6"/><circle cx="136" cy="126" r="6"/>
+      <circle cx="68" cy="144" r="6"/><circle cx="98" cy="142" r="6"/><circle cx="128" cy="145" r="6"/>
+      <circle cx="88" cy="158" r="6"/><circle cx="112" cy="157" r="6"/>
+    </g>
+  </g>
+  <ellipse cx="76" cy="72" rx="18" ry="12" fill="#fff" opacity=".18" transform="rotate(-35 76 72)"/>
+</svg>
