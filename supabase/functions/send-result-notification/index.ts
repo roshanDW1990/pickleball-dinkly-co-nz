@@ -94,7 +94,7 @@ Deno.serve(async (req: Request) => {
         "Authorization": `Bearer ${resendApiKey}`,
       },
       body: JSON.stringify({
-        from: "noreply@dinkly.co.nz",
+        from: "hello@dinkly.co.nz",
         to: [ADMIN_EMAIL],
         subject: `${isResubmission ? "Re-submitted" : "New"} match result: ${player1Name} vs ${player2Name}`,
         html: emailHtml,
