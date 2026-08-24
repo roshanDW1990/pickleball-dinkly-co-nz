@@ -298,6 +298,50 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ user, onSignOut }) => 
         console.error('Error updating match status:', updateError);
       }
 
+      // Notify admin via email (fire-and-forget, don't block UI)
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const player1Name = selectedMatch.isPlayer1
+          ? `${user.firstName} ${user.lastName}`
+          : `${selectedMatch.opponent.first_name} ${selectedMatch.opponent.last_name}`;
+        const player2Name = selectedMatch.isPlayer1
+          ? `${selectedMatch.opponent.first_name} ${selectedMatch.opponent.last_name}`
+          : `${user.firstName} ${user.lastName}`;
+        const winnerName = winnerId === user.id
+          ? `${user.firstName} ${user.lastName}`
+          : `${selectedMatch.opponent.first_name} ${selectedMatch.opponent.last_name}`;
+
+        const scoreParts = [`${player1Set1}-${player2Set1}`, `${player1Set2}-${player2Set2}`];
+        if (player1Set3 !== null && player2Set3 !== null) {
+          scoreParts.push(`${player1Set3}-${player2Set3}`);
+        }
+
+        fetch(`${supabaseUrl}/functions/v1/send-result-notification`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            submitterName: `${user.firstName} ${user.lastName}`,
+            player1Name,
+            player2Name,
+            winnerName,
+            scores: scoreParts.join(', '),
+            leagueName: selectedMatch.tournament.name,
+            groupName: selectedMatch.group?.name || undefined,
+            roundNumber: selectedMatch.round_number,
+            matchNumber: selectedMatch.match_number,
+            isResubmission: isResubmit,
+          }),
+        }).catch((emailErr) => {
+          console.error('Failed to send result notification:', emailErr);
+        });
+      } catch (emailErr) {
+        console.error('Failed to send result notification:', emailErr);
+      }
+
       setShowSubmitModal(false);
       setSelectedMatch(null);
       fetchMatches();
