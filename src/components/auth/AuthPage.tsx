@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Users, Calendar, Award, Trophy, ArrowRight, UserPlus, Users as Users2, Heart } from 'lucide-react';
+import { Users, Calendar, Award, Trophy, ArrowRight, UserPlus, Users as Users2 } from 'lucide-react';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
 import { EmailVerificationPage } from './EmailVerificationPage';
@@ -120,7 +120,7 @@ export const AuthPage: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">How It Works</h2>
           <div className="w-20 h-1 bg-green-600 mx-auto rounded-full"></div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/90 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4 relative">
               <UserPlus className="h-6 w-6 text-green-600" />
@@ -151,14 +151,6 @@ export const AuthPage: React.FC = () => {
             </div>
             <h3 className="text-lg font-semibold text-slate-800 mb-2">Play and compete</h3>
             <p className="text-slate-600 text-sm">Sign up for leagues and events.</p>
-          </div>
-          <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/90 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4 relative">
-              <Heart className="h-6 w-6 text-green-600" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs font-bold rounded-full flex items-center justify-center">4</span>
-            </div>
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">Grow your network</h3>
-            <p className="text-slate-600 text-sm">Build lasting friendships on and off the court.</p>
           </div>
         </div>
       </div>
