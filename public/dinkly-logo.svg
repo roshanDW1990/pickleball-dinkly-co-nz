@@ -1,29 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title description">
   <title id="title">Dinkly green pickleball logo</title>
-  <desc id="description">A green pickleball with holes inside a rounded green square.</desc>
+  <desc id="description">A shaded green pickleball with holes inside a rounded green square.</desc>
   <defs>
-    <radialGradient id="ball" cx="37%" cy="32%" r="65%">
-      <stop offset="0" stop-color="#bbf7d0"/>
-      <stop offset=".28" stop-color="#22c55e"/>
-      <stop offset=".65" stop-color="#16a34a"/>
-      <stop offset="1" stop-color="#14532d"/>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#55d58a"/>
+      <stop offset="1" stop-color="#3cc47a"/>
+    </linearGradient>
+    <radialGradient id="ball" cx="32%" cy="26%" r="72%">
+      <stop offset="0" stop-color="#a6d77b"/>
+      <stop offset=".45" stop-color="#62b96b"/>
+      <stop offset=".8" stop-color="#329b5d"/>
+      <stop offset="1" stop-color="#23734d"/>
     </radialGradient>
-    <radialGradient id="hole" cx="38%" cy="28%" r="62%">
-      <stop offset="0" stop-color="#1a3d1a"/>
-      <stop offset="1" stop-color="#020a02"/>
+    <radialGradient id="hole" cx="32%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#385c42"/>
+      <stop offset="1" stop-color="#173d32"/>
     </radialGradient>
-    <clipPath id="clip"><circle cx="100" cy="100" r="62"/></clipPath>
+    <clipPath id="ballClip"><circle cx="32" cy="32" r="19"/></clipPath>
   </defs>
-  <rect x="4" y="4" width="192" height="192" rx="40" fill="#22c55e"/>
-  <circle cx="100" cy="100" r="64" fill="url(#ball)" stroke="#0d4d1f" stroke-width="1.8"/>
-  <g clip-path="url(#clip)" fill="url(#hole)">
-    <circle cx="74" cy="48" r="6"/><circle cx="100" cy="44" r="6"/><circle cx="126" cy="48" r="6"/>
-    <circle cx="58" cy="67" r="6"/><circle cx="84" cy="63" r="6"/><circle cx="116" cy="63" r="6"/><circle cx="142" cy="67" r="6"/>
-    <circle cx="46" cy="88" r="6"/><circle cx="72" cy="84" r="6"/><circle cx="100" cy="82" r="6"/><circle cx="128" cy="84" r="6"/><circle cx="154" cy="88" r="6"/>
-    <circle cx="42" cy="108" r="6"/><circle cx="68" cy="104" r="6"/><circle cx="97" cy="103" r="6"/><circle cx="126" cy="104" r="6"/><circle cx="154" cy="109" r="6"/>
-    <circle cx="54" cy="127" r="6"/><circle cx="80" cy="123" r="6"/><circle cx="108" cy="122" r="6"/><circle cx="136" cy="126" r="6"/>
-    <circle cx="68" cy="144" r="6"/><circle cx="98" cy="142" r="6"/><circle cx="128" cy="145" r="6"/>
-    <circle cx="88" cy="158" r="6"/><circle cx="112" cy="157" r="6"/>
+  <rect width="64" height="64" rx="16" fill="url(#background)"/>
+  <circle cx="32" cy="32" r="19" fill="url(#ball)"/>
+  <g clip-path="url(#ballClip)" fill="url(#hole)">
+    <circle cx="23" cy="17" r="2"/><circle cx="30" cy="15" r="2"/><circle cx="37" cy="17" r="2"/>
+    <circle cx="19" cy="22" r="2"/><circle cx="26" cy="21" r="2"/><circle cx="34" cy="21" r="2"/><circle cx="42" cy="23" r="2"/>
+    <circle cx="16" cy="28" r="2"/><circle cx="23" cy="27" r="2"/><circle cx="31" cy="27" r="2"/><circle cx="39" cy="28" r="2"/><circle cx="46" cy="29" r="2"/>
+    <circle cx="15" cy="35" r="2"/><circle cx="22" cy="34" r="2"/><circle cx="30" cy="34" r="2"/><circle cx="38" cy="35" r="2"/><circle cx="45" cy="36" r="2"/>
+    <circle cx="18" cy="42" r="2"/><circle cx="25" cy="41" r="2"/><circle cx="33" cy="41" r="2"/><circle cx="41" cy="42" r="2"/>
+    <circle cx="23" cy="47" r="2"/><circle cx="31" cy="47" r="2"/><circle cx="38" cy="46" r="2"/>
   </g>
-  <ellipse cx="76" cy="72" rx="18" ry="12" fill="#fff" opacity=".18" transform="rotate(-35 76 72)"/>
+  <ellipse cx="25" cy="24" rx="5" ry="3" fill="#d8efaa" opacity=".26" transform="rotate(-28 25 24)"/>
 </svg>
