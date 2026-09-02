@@ -22,7 +22,7 @@ export const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/dinklynz/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-slate-700 p-2 rounded-lg hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 transition-all duration-300 transform hover:scale-110"
