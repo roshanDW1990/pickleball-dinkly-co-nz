@@ -160,21 +160,22 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, onRef
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div className="inline-flex items-center px-4 py-3 bg-green-50 rounded-lg border border-green-200 w-auto">
-                      <TrendingUp className="h-5 w-5 text-green-600 mr-3" />
+                  <button
+                    onClick={handleEditDupr}
+                    className="flex items-center justify-between gap-4 w-full max-w-sm px-4 py-3 bg-green-50 rounded-lg border border-green-200 text-left hover:bg-green-100 hover:border-green-300 transition-colors group"
+                    title="Edit DUPR Rating"
+                  >
+                    <span className="flex items-center min-w-0">
+                      <TrendingUp className="h-5 w-5 text-green-600 mr-3 flex-shrink-0" />
                       <span className="text-lg font-semibold text-green-700">
                         {user.duprRating || '-'}
                       </span>
-                    </div>
-                    <button
-                      onClick={handleEditDupr}
-                      className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 text-slate-500 hover:bg-green-100 hover:text-green-600 transition-colors"
-                      title="Edit DUPR Rating"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </button>
-                  </div>
+                    </span>
+                    <span className="inline-flex items-center gap-2 text-sm font-medium text-green-700 flex-shrink-0">
+                      <Pencil className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                      Edit rating
+                    </span>
+                  </button>
                 )}
               </div>
             </div>
