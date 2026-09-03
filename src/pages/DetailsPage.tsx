@@ -1,15 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Header } from '../components/dashboard/Header';
 import { Footer } from '../components/common/Footer';
-import { User as UserIcon, Mail, Phone, TrendingUp } from 'lucide-react';
+import { User as UserIcon, Mail, Phone, TrendingUp, Pencil, Check, X, Loader2 } from 'lucide-react';
 import { User } from '../types';
+import { supabase } from '../lib/supabase';
+import { useToast } from '../components/common/Toast';
 
 interface DetailsPageProps {
   user: User;
   onSignOut: () => void;
+  onRefreshProfile: () => Promise<void>;
 }
 
-export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => {
+export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut, onRefreshProfile }) => {
+  const { toast } = useToast();
+  const [isEditingDupr, setIsEditingDupr] = useState(false);
+  const [duprValue, setDuprValue] = useState(user.duprRating || '');
+  const [saving, setSaving] = useState(false);
+
+  const handleEditDupr = () => {
+    setDuprValue(user.duprRating || '');
+    setIsEditingDupr(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingDupr(false);
+    setDuprValue(user.duprRating || '');
+  };
+
+  const handleSaveDupr = async () => {
+    const sanitized = duprValue.trim();
+
+    if (sanitized && !/^\d{1,2}(\.\d{1,2})?$/.test(sanitized)) {
+      toast('Please enter a valid rating (e.g. 3.5 or 4.0)', 'error');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ dupr_rating: sanitized || null })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      await onRefreshProfile();
+      setIsEditingDupr(false);
+      toast('DUPR rating updated successfully', 'success');
+    } catch (error) {
+      console.error('Error updating DUPR rating:', error);
+      toast('Failed to update DUPR rating. Please try again.', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDuprInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || /^\d{0,2}(\.\d{0,2})?$/.test(value)) {
+      setDuprValue(value);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Header user={user} onSignOut={onSignOut} />
@@ -69,12 +122,60 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({ user, onSignOut }) => 
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-600">DUPR Rating - Singles</label>
-                <div className="inline-flex items-center px-4 py-3 bg-green-50 rounded-lg border border-green-200 w-auto">
-                  <TrendingUp className="h-5 w-5 text-green-600 mr-3" />
-                  <span className="text-lg font-semibold text-green-700">
-                    {user.duprRating || '-'}
-                  </span>
-                </div>
+                {isEditingDupr ? (
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="inline-flex items-center bg-green-50 rounded-lg border border-green-300 px-3">
+                      <TrendingUp className="h-5 w-5 text-green-600 mr-2" />
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={duprValue}
+                        onChange={handleDuprInputChange}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleSaveDupr();
+                          if (e.key === 'Escape') handleCancelEdit();
+                        }}
+                        placeholder="e.g. 3.5"
+                        maxLength={5}
+                        autoFocus
+                        disabled={saving}
+                        className="bg-transparent text-lg font-semibold text-green-700 outline-none py-3 w-24 placeholder:text-green-300"
+                      />
+                    </div>
+                    <button
+                      onClick={handleSaveDupr}
+                      disabled={saving}
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Save"
+                    >
+                      {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Check className="h-5 w-5" />}
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      disabled={saving}
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors disabled:opacity-50"
+                      title="Cancel"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="inline-flex items-center px-4 py-3 bg-green-50 rounded-lg border border-green-200 w-auto">
+                      <TrendingUp className="h-5 w-5 text-green-600 mr-3" />
+                      <span className="text-lg font-semibold text-green-700">
+                        {user.duprRating || '-'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={handleEditDupr}
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 text-slate-500 hover:bg-green-100 hover:text-green-600 transition-colors"
+                      title="Edit DUPR Rating"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

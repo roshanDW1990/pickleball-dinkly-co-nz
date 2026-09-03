@@ -28,7 +28,7 @@ import { useAuth } from './hooks/useAuth';
 import { ToastProvider } from './components/common/Toast';
 
 function AppContent() {
-  const { isAuthenticated, user, signOut, loading } = useAuth();
+  const { isAuthenticated, user, signOut, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -124,7 +124,7 @@ function AppContent() {
         path="/details"
         element={
           isAuthenticated && user ? (
-            <DetailsPage user={user} onSignOut={signOut} />
+            <DetailsPage user={user} onSignOut={signOut} onRefreshProfile={refreshProfile} />
           ) : (
             <AuthPage />
           )
