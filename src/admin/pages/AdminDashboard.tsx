@@ -466,9 +466,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                       value={formData.description}
                       onChange={handleInputChange}
                       required
-                      rows={3}
+                      rows={6}
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     />
+                    <p className="text-xs text-slate-400 mt-1">Press Enter for a new line. Line breaks will be shown on the league page.</p>
                   </div>
 
                   <div>
@@ -687,7 +688,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                           </div>
                         </div>
 
-                        <p className="text-slate-600 mb-4">{tournament.description}</p>
+                        <p className="text-slate-600 mb-4 whitespace-pre-line">{tournament.description}</p>
 
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm mb-4">
                           <div>

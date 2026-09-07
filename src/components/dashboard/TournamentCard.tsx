@@ -82,7 +82,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
         </div>
       </div>
 
-      <p className="text-slate-600 mb-4 line-clamp-2">{tournament.description}</p>
+      <p className="text-slate-600 mb-4 line-clamp-2 whitespace-pre-line">{tournament.description}</p>
 
       <div className="space-y-3 mb-4">
         <div className="flex items-center text-sm text-slate-600">

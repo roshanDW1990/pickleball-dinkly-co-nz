@@ -474,7 +474,7 @@ export const AdminPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <p className="text-slate-600 mb-4">{tournament.description}</p>
+                    <p className="text-slate-600 mb-4 whitespace-pre-line">{tournament.description}</p>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>

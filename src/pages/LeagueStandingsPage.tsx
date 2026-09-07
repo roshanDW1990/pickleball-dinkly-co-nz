@@ -243,7 +243,7 @@ export const LeagueStandingsPage: React.FC<LeagueStandingsPageProps> = ({ user, 
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-slate-800">{league.name}</h1>
-                  <p className="text-slate-600">{league.description}</p>
+                  <p className="text-slate-600 whitespace-pre-line">{league.description}</p>
                 </div>
               </div>
 

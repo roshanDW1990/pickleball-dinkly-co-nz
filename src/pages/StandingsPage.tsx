@@ -149,7 +149,7 @@ export const StandingsPage: React.FC<StandingsPageProps> = ({ user, onSignOut })
                   </div>
                 </div>
 
-                <p className="text-slate-600 mb-4 line-clamp-2">{league.description}</p>
+                <p className="text-slate-600 mb-4 line-clamp-2 whitespace-pre-line">{league.description}</p>
 
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-sm text-slate-600">
