@@ -169,8 +169,8 @@ Deno.serve(async (req: Request) => {
         },
       ],
       mode: "payment",
-      success_url: `${origin}/upcoming-tournaments?registration=success&tournament=${tournamentId}&session_id={CHECKOUT_SESSION_ID}&registration_id=${registration.id}`,
-      cancel_url: `${origin}/upcoming-tournaments?registration=cancelled`,
+      success_url: `${origin}/upcoming-leagues?registration=success&tournament=${tournamentId}&session_id={CHECKOUT_SESSION_ID}&registration_id=${registration.id}`,
+      cancel_url: `${origin}/upcoming-leagues?registration=cancelled`,
       customer_email: user.email,
       payment_intent_data: {
         receipt_email: user.email,

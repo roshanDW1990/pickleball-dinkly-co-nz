@@ -117,7 +117,7 @@ function AppContent() {
           )
         }
       />
-      <Route path="/upcoming-tournaments" element={
+      <Route path="/upcoming-leagues" element={
         <UpcomingTournamentsPage user={user} onSignOut={signOut} />
       } />
       <Route

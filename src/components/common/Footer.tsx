@@ -78,7 +78,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="/upcoming-tournaments"
+                  to="/upcoming-leagues"
                   className="text-slate-400 hover:text-green-400 transition-colors duration-200 text-sm flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-green-400 transition-all duration-200 mr-0 group-hover:mr-2"></span>

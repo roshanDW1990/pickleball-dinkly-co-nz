@@ -100,7 +100,7 @@ export const AuthPage: React.FC = () => {
               <h3 className="text-lg font-semibold text-slate-800 mb-2">Local Community</h3>
               <p className="text-slate-600">Find and connect with pickleball players in your area</p>
             </div>
-            <Link to="/upcoming-tournaments" className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/70 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+            <Link to="/upcoming-leagues" className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/70 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
               <Calendar className="h-12 w-12 text-green-600 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-slate-800 mb-2">Leagues</h3>
               <p className="text-slate-600">Join competitive leagues and organised matches</p>
@@ -175,7 +175,7 @@ export const AuthPage: React.FC = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link to="/upcoming-tournaments">
+              <Link to="/upcoming-leagues">
                 <Button
                   variant="outline"
                   className="bg-white text-green-600 border-white hover:bg-green-50 hover:text-green-700 font-semibold px-8 py-3 text-lg"

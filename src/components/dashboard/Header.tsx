@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onSignOut }) => {
 
           {/* Navigation Menu */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/upcoming-tournaments" className="text-slate-600 hover:text-green-600 transition-colors">
+            <Link to="/upcoming-leagues" className="text-slate-600 hover:text-green-600 transition-colors">
               Upcoming Leagues
             </Link>
             <Link to="/standings" className="text-slate-600 hover:text-green-600 transition-colors">

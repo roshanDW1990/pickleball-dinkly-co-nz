@@ -1,0 +1,38 @@
+[functions.create-checkout-session]
+verify_jwt = true
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.send-group-contact-email]
+verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.send-test-email]
+verify_jwt = true
+
+[functions.create-test-users]
+verify_jwt = false
+
+[functions.send-rejection-email]
+verify_jwt = false
+
+[functions.send-approval-email]
+verify_jwt = false
+
+[functions.verify-payment]
+verify_jwt = true
+
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.send-registration-email]
+verify_jwt = true
+
+[functions.send-new-member-notification]
+verify_jwt = false
+
+[functions.send-result-notification]
+verify_jwt = true

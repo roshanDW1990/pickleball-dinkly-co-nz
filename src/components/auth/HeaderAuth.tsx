@@ -29,7 +29,7 @@ export const HeaderAuth: React.FC<HeaderAuthProps> = ({
           {/* Navigation Menu */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
-              to="/upcoming-tournaments"
+              to="/upcoming-leagues"
               className="text-slate-700 hover:text-green-600 font-medium transition-colors duration-200 relative group"
             >
               Leagues
