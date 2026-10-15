@@ -87,7 +87,7 @@ function buildGroupContactPreview(): { subject: string; html: string } {
               </p>
               ${datesHtml}
               <p style="margin: 0 0 16px;">
-                Below is the contact information for all players in your group. Please reach out to schedule your matches!
+                Below is the contact information for all players in your group. Please reach out to schedule your matches. A good way to keep communication easy is to set up a WhatsApp group.
               </p>
 
               <div style="margin: 24px 0;">
