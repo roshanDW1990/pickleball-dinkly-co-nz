@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Users, Calendar, Award, Trophy, ArrowRight, UserPlus, Users as Users2 } from 'lucide-react';
+import { Users, Calendar, Award, Trophy, ArrowRight, UserPlus, MapPin, TrendingUp } from 'lucide-react';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
 import { EmailVerificationPage } from './EmailVerificationPage';
@@ -11,6 +11,10 @@ import { Footer } from '../common/Footer';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { useAuth } from '../../hooks/useAuth';
+
+const stepCardClass = 'text-center p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/90 transition-all duration-300 transform hover:-translate-y-1 shadow-sm';
+const stepIconClass = 'inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4 relative';
+const stepBadgeClass = 'absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs font-bold rounded-full flex items-center justify-center';
 
 export const AuthPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -120,25 +124,44 @@ export const AuthPage: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">How It Works</h2>
           <div className="w-20 h-1 bg-green-600 mx-auto rounded-full"></div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/90 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4 relative">
-              <UserPlus className="h-6 w-6 text-green-600" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs font-bold rounded-full flex items-center justify-center">1</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {user ? (
+            <div className={stepCardClass}>
+              <div className={stepIconClass}>
+                <UserPlus className="h-6 w-6 text-green-600" />
+                <span className={stepBadgeClass}>1</span>
+              </div>
+              <h3 className="text-lg font-semibold text-slate-800 mb-2">Create Your Profile</h3>
+              <p className="text-slate-600 text-sm">Sign up and enter your details, location and skill level.</p>
             </div>
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">Create your profile</h3>
-            <p className="text-slate-600 text-sm">Tell us your location and skill level.</p>
-          </div>
-          <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/90 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4 relative">
-              <Users2 className="h-6 w-6 text-green-600" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs font-bold rounded-full flex items-center justify-center">2</span>
+          ) : (
+            <button type="button" onClick={handleOpenSignUp} className={`${stepCardClass} group w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500`}>
+              <div className={stepIconClass}>
+                <UserPlus className="h-6 w-6 text-green-600" />
+                <span className={stepBadgeClass}>1</span>
+              </div>
+              <h3 className="text-lg font-semibold text-slate-800 mb-2">Create Your Profile</h3>
+              <p className="text-slate-600 text-sm mb-4">Sign up and enter your details, location and skill level.</p>
+              <span className="inline-flex items-center text-sm font-semibold text-green-600 group-hover:text-green-700">
+                Sign up free
+                <ArrowRight className="h-4 w-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" />
+              </span>
+            </button>
+          )}
+          <Link to="/upcoming-leagues" className={`${stepCardClass} group block focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500`}>
+            <div className={stepIconClass}>
+              <MapPin className="h-6 w-6 text-green-600" />
+              <span className={stepBadgeClass}>2</span>
             </div>
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">Join the community</h3>
-            <p className="text-slate-600 text-sm">Connect with local players and groups.</p>
-          </div>
-          <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/90 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4 relative">
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Join a League</h3>
+            <p className="text-slate-600 text-sm mb-4">Find and join a local pickleball league in your area.</p>
+            <span className="inline-flex items-center text-sm font-semibold text-green-600 group-hover:text-green-700">
+              Browse leagues
+              <ArrowRight className="h-4 w-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" />
+            </span>
+          </Link>
+          <div className={stepCardClass}>
+            <div className={stepIconClass}>
               <svg className="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <ellipse cx="9.5" cy="9.5" rx="6.5" ry="6.5" transform="rotate(-45 9.5 9.5)" />
                 <line x1="14" y1="14" x2="21" y2="21" />
@@ -147,10 +170,18 @@ export const AuthPage: React.FC = () => {
                 <circle cx="9.5" cy="7.5" r="1" fill="currentColor" stroke="none" />
                 <circle cx="9.5" cy="11.5" r="1" fill="currentColor" stroke="none" />
               </svg>
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs font-bold rounded-full flex items-center justify-center">3</span>
+              <span className={stepBadgeClass}>3</span>
             </div>
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">Play and compete</h3>
-            <p className="text-slate-600 text-sm">Sign up for leagues and events.</p>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Play &amp; Compete</h3>
+            <p className="text-slate-600 text-sm">Connect with players in your group and arrange matches at a time and place that suits you.</p>
+          </div>
+          <div className={stepCardClass}>
+            <div className={stepIconClass}>
+              <TrendingUp className="h-6 w-6 text-green-600" />
+              <span className={stepBadgeClass}>4</span>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Track Your Ranking</h3>
+            <p className="text-slate-600 text-sm">Enter your match results on your Dinkly dashboard and see where you stand on your group's leaderboard.</p>
           </div>
         </div>
       </div>
