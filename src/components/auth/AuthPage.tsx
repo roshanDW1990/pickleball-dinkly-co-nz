@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Users, Calendar, Award, Trophy, ArrowRight, UserPlus, MapPin, TrendingUp } from 'lucide-react';
+import { Trophy, ArrowRight, UserPlus, MapPin, TrendingUp } from 'lucide-react';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
 import { EmailVerificationPage } from './EmailVerificationPage';
@@ -93,37 +93,10 @@ export const AuthPage: React.FC = () => {
               Play More Pickleball
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Join local round-robin leagues, meet new players, and enjoy competitive games that fit your schedule.
+              Join local round-robin leagues, compete with players of similar skill, and play at a time and place that suits you.
             </p>
           </div>
 
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/70 transition-all duration-300 transform hover:-translate-y-1">
-              <Users className="h-12 w-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">Local Community</h3>
-              <p className="text-slate-600">Find and connect with pickleball players in your area</p>
-            </div>
-            <Link to="/upcoming-leagues" className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/70 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
-              <Calendar className="h-12 w-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">Leagues</h3>
-              <p className="text-slate-600">Join competitive leagues and organised matches</p>
-            </Link>
-            <Link to="/standings" className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/70 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
-              <Award className="h-12 w-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">Rankings</h3>
-              <p className="text-slate-600">Track your progress and climb the leaderboards</p>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* How It Works Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">How It Works</h2>
-          <div className="w-20 h-1 bg-green-600 mx-auto rounded-full"></div>
-        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {user ? (
             <div className={stepCardClass}>
@@ -154,7 +127,7 @@ export const AuthPage: React.FC = () => {
               <span className={stepBadgeClass}>2</span>
             </div>
             <h3 className="text-lg font-semibold text-slate-800 mb-2">Join a League</h3>
-            <p className="text-slate-600 text-sm mb-4">Find and join a local pickleball league in your area.</p>
+            <p className="text-slate-600 text-sm mb-4">Join a local league and get grouped with players of a similar skill level.</p>
             <span className="inline-flex items-center text-sm font-semibold text-green-600 group-hover:text-green-700">
               Browse leagues
               <ArrowRight className="h-4 w-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" />
@@ -175,14 +148,19 @@ export const AuthPage: React.FC = () => {
             <h3 className="text-lg font-semibold text-slate-800 mb-2">Play &amp; Compete</h3>
             <p className="text-slate-600 text-sm">Connect with players in your group and arrange matches at a time and place that suits you.</p>
           </div>
-          <div className={stepCardClass}>
+          <Link to="/standings" className={`${stepCardClass} group block focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500`}>
             <div className={stepIconClass}>
               <TrendingUp className="h-6 w-6 text-green-600" />
               <span className={stepBadgeClass}>4</span>
             </div>
             <h3 className="text-lg font-semibold text-slate-800 mb-2">Track Your Ranking</h3>
-            <p className="text-slate-600 text-sm">Enter your match results on your Dinkly dashboard and see where you stand on your group's leaderboard.</p>
-          </div>
+            <p className="text-slate-600 text-sm mb-4">Enter your match results on your Dinkly dashboard and see where you stand on your group's leaderboard.</p>
+            <span className="inline-flex items-center text-sm font-semibold text-green-600 group-hover:text-green-700">
+              View standings
+              <ArrowRight className="h-4 w-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" />
+            </span>
+          </Link>
+        </div>
         </div>
       </div>
 
