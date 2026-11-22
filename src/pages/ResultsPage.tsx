@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
 import { useToast } from '../components/common/Toast';
+import { trackEvent } from '../lib/analytics';
 
 interface ResultsPageProps {
   user: User;
@@ -289,6 +290,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ user, onSignOut }) => 
       console.error('Error submitting result:', error);
       toast('Failed to submit result. Please try again.', 'error');
     } else {
+      trackEvent('match_result_submitted', { resubmission: isResubmit ? 'yes' : 'no' });
       const { error: updateError } = await supabase
         .from('matches')
         .update({ status: 'in_progress', result_submitted: true })

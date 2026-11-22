@@ -26,6 +26,8 @@ import { AdminDashboard } from './admin/pages/AdminDashboard';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { useAuth } from './hooks/useAuth';
 import { ToastProvider } from './components/common/Toast';
+import { AnalyticsTracker } from './components/common/AnalyticsTracker';
+import { CookieConsent } from './components/common/CookieConsent';
 
 function AppContent() {
   const { isAuthenticated, user, signOut, loading, refreshProfile } = useAuth();
@@ -190,7 +192,9 @@ function App() {
   return (
     <ToastProvider>
       <Router>
+        <AnalyticsTracker />
         <AppContent />
+        <CookieConsent />
       </Router>
     </ToastProvider>
   );

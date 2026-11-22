@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Send, MessageSquare, User } from 'lucide-react';
 import { Button } from '../components/common/Button';
+import { trackEvent } from '../lib/analytics';
 
 export const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -42,6 +43,7 @@ export const ContactPage: React.FC = () => {
         throw new Error(data.error || 'Failed to send message');
       }
 
+      trackEvent('contact_form_sent');
       setIsSubmitted(true);
     } catch (err) {
       alert('Sorry, something went wrong sending your message. Please try again or email us directly at hello@dinkly.co.nz');

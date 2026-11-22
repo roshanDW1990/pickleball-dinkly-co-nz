@@ -153,9 +153,14 @@ export const PrivacyPolicyPage: React.FC = () => {
           <ul className="list-disc list-inside space-y-2 ml-4 mb-4">
             <li>Improve website functionality</li>
             <li>Enhance user experience</li>
-            <li>Collect basic website analytics</li>
+            <li>Collect website analytics through Google Analytics, only if you accept analytics cookies</li>
           </ul>
-          <p>You can control or disable cookies through your browser settings.</p>
+          <p className="mb-4">
+            Google Analytics helps us understand which pages are visited and how many people sign up, sign in, enter leagues, submit results or contact us. We do not send your name, email address, phone number or message content to Google, and IP addresses are anonymised. Google processes this information on our behalf and may store it outside New Zealand.
+          </p>
+          <p>
+            You can change your choice at any time using the "Cookie Preferences" link at the bottom of every page, or control cookies through your browser settings. See our Cookie Policy for more detail.
+          </p>
         </Section>
 
         {/* Section 6: Data Security */}
@@ -241,7 +246,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         {/* Last Updated Notice */}
         <div className="bg-slate-100 border border-slate-300 rounded-lg p-6 text-center">
           <p className="text-slate-600 text-sm">
-            This Privacy Policy was last updated on 1st January 2026
+            This Privacy Policy was last updated on 22 November 2026
           </p>
         </div>
       </div>

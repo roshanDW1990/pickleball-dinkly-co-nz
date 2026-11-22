@@ -8,6 +8,7 @@ import { User } from '../types';
 import { Trophy, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useToast } from '../components/common/Toast';
+import { trackEvent } from '../lib/analytics';
 
 interface UpcomingTournamentsPageProps {
   user?: User | null;
@@ -30,6 +31,11 @@ export const UpcomingTournamentsPage: React.FC<UpcomingTournamentsPageProps> = (
 
     if (registration === 'success' && tournamentId) {
       setSuccessMessage('Payment confirmed! Your registration is being processed...');
+      trackEvent('purchase', {
+        transaction_id: sessionId || registrationId || tournamentId,
+        league_id: tournamentId,
+        currency: 'NZD',
+      });
 
       const verifyAndRefresh = async () => {
         if (sessionId && registrationId) {
@@ -103,6 +109,7 @@ export const UpcomingTournamentsPage: React.FC<UpcomingTournamentsPageProps> = (
       }
 
       if (result.url) {
+        trackEvent('begin_checkout', { league_id: tournamentId, currency: 'NZD' });
         window.location.href = result.url;
       }
     } catch (error) {

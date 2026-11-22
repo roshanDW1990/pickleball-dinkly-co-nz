@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User, AuthState } from '../types';
 import { supabase } from '../lib/supabase';
+import { trackEvent } from '../lib/analytics';
 
 export const useAuth = () => {
   const [authState, setAuthState] = useState<AuthState>({
@@ -114,6 +115,7 @@ export const useAuth = () => {
       }
 
       if (data.user) {
+        trackEvent('login', { method: 'email' });
         await loadUserProfile(data.user.id);
         return { success: true };
       }
@@ -178,6 +180,7 @@ export const useAuth = () => {
         }
 
         // Show the email verification screen — do not log the user in yet
+        trackEvent('sign_up', { method: 'email' });
         setPendingVerificationEmail(userData.email!);
         setAuthState({
           isAuthenticated: false,

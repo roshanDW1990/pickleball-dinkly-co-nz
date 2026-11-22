@@ -2,6 +2,7 @@ import React from 'react';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
 import { DinklyLogo } from './DinklyLogo';
 import { Link } from 'react-router-dom';
+import { openCookiePreferences } from '../../lib/analytics';
 
 export const Footer: React.FC = () => {
   return (
@@ -184,6 +185,13 @@ export const Footer: React.FC = () => {
             <Link to="/cookies" className="text-slate-400 hover:text-green-400 transition-colors duration-200">
               Cookie Policy
             </Link>
+            <button
+              type="button"
+              onClick={openCookiePreferences}
+              className="text-slate-400 hover:text-green-400 transition-colors duration-200"
+            >
+              Cookie Preferences
+            </button>
           </div>
         </div>
       </div>

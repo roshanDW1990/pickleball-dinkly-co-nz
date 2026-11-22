@@ -1,5 +1,6 @@
 import React from 'react';
 import { Cookie, Shield, BarChart3, Globe, Settings, RefreshCw, Mail } from 'lucide-react';
+import { openCookiePreferences } from '../lib/analytics';
 
 interface SectionProps {
   title: string;
@@ -37,7 +38,7 @@ export const CookiesPolicyPage: React.FC = () => {
             Cookies Policy
           </h1>
           <p className="text-xl text-green-50 max-w-2xl mx-auto">
-            Last updated: 29 July 2025
+            Last updated: 22 November 2026
           </p>
         </div>
       </div>
@@ -98,17 +99,33 @@ export const CookiesPolicyPage: React.FC = () => {
           icon={<BarChart3 className="h-6 w-6 text-green-600" />}
         >
           <p className="mb-4">
-            We do not currently use analytics cookies. If we introduce them in future, they will help us understand:
+            With your permission, we use Google Analytics to understand how Dinkly is used. Analytics cookies are only set after you click "Accept" on our cookie notice. They help us understand:
           </p>
           <ul className="list-disc list-inside space-y-2 ml-4 mb-4">
             <li>Which pages are most popular</li>
-            <li>How users navigate the site</li>
-            <li>Where technical issues occur</li>
-            <li>Overall website performance</li>
+            <li>How visitors and members navigate the site</li>
+            <li>How many people sign up, sign in, enter leagues, submit results or contact us</li>
+            <li>The type of device, browser and approximate region (country or city) visitors use</li>
           </ul>
-          <p className="text-sm italic bg-slate-50 p-4 rounded-lg border border-slate-200">
-            If analytics cookies are introduced, we will update this policy and may use services such as Google Analytics or similar tools.
+          <p className="mb-4">
+            We never send your name, email address, phone number or message content to Google. IP addresses are anonymised, and the information is reported to us only as combined statistics. Our admin area is not tracked.
           </p>
+          <div className="text-sm bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2">
+            <p>
+              <strong>Your choice:</strong> you can accept or decline analytics at any time using{' '}
+              <button
+                type="button"
+                onClick={openCookiePreferences}
+                className="text-green-600 hover:text-green-700 font-semibold underline underline-offset-2"
+              >
+                Cookie Preferences
+              </button>
+              {' '}(also linked at the bottom of every page). Declining has no effect on how the site works.
+            </p>
+            <p>
+              You can also opt out of Google Analytics on all websites with Google's browser add-on at tools.google.com/dlpage/gaoptout.
+            </p>
+          </div>
         </Section>
 
         {/* Third-party cookies */}
@@ -131,6 +148,10 @@ export const CookiesPolicyPage: React.FC = () => {
             <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
               <h3 className="font-semibold text-slate-800 mb-1">Supabase</h3>
               <p className="text-sm">Authentication and session management</p>
+            </div>
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h3 className="font-semibold text-slate-800 mb-1">Google Analytics</h3>
+              <p className="text-sm">Anonymous website usage statistics (only set if you accept analytics cookies)</p>
             </div>
           </div>
           <p className="text-sm">
@@ -193,7 +214,7 @@ export const CookiesPolicyPage: React.FC = () => {
         {/* Last Updated Notice */}
         <div className="bg-slate-100 border border-slate-300 rounded-lg p-6 text-center">
           <p className="text-slate-600 text-sm">
-            This Cookies Policy was last updated on 29 July 2025
+            This Cookies Policy was last updated on 22 November 2026
           </p>
         </div>
       </div>
