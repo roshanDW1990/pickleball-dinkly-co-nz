@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Tournament, Match } from '../types';
 import { supabase } from '../lib/supabase';
+import { isRegistrationClosed } from '../utils/registration';
 
 export const useTournaments = (userId?: string) => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -40,14 +41,8 @@ export const useTournaments = (userId?: string) => {
 
       if (error) throw error;
 
-      const oneDayAgo = new Date();
-      oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-
       const mappedTournaments: Tournament[] = (data || [])
-        .filter(tournament => {
-          const endDate = new Date(tournament.end_date);
-          return endDate >= oneDayAgo;
-        })
+        .filter(tournament => !isRegistrationClosed(tournament.registration_deadline))
         .map(tournament => ({
           id: tournament.id,
           name: tournament.name,

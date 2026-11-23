@@ -3,6 +3,7 @@ import { Calendar, MapPin, DollarSign, Trophy, X } from 'lucide-react';
 import { Button } from '../common/Button';
 import { RichText, toPlainText } from '../common/RichText';
 import { Tournament } from '../../types';
+import { isRegistrationClosed } from '../../utils/registration';
 
 interface TournamentCardProps {
   tournament: Tournament;
@@ -47,13 +48,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
     });
   };
 
-  const isRegistrationClosed = () => {
-    const [year, month, day] = tournament.registrationDeadline.split('-').map(Number);
-    const deadlineEndUTC = Date.UTC(year, month - 1, day, 12, 0, 0, 0);
-    return Date.now() > deadlineEndUTC;
-  };
-
-  const registrationClosed = isRegistrationClosed();
+  const registrationClosed = isRegistrationClosed(tournament.registrationDeadline);
 
   return (
     <>
