@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Plus, CreditCard as Edit2, Trash2, Save, X, Trophy, LogOut, Check, Archive, ArchiveRestore, Users, Target, Clock, UserCircle } from 'lucide-react';
 import { DinklyLogo } from '../../components/common/DinklyLogo';
 import { Button } from '../../components/common/Button';
+import { RichText } from '../../components/common/RichText';
+import { RichTextEditor } from '../../components/common/RichTextEditor';
 import { supabase } from '../../lib/supabase';
 import { User } from '../../types';
 import { GroupsManagement } from './GroupsManagement';
@@ -461,15 +463,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       Description *
                     </label>
-                    <textarea
+                    <RichTextEditor
                       name="description"
                       value={formData.description}
-                      onChange={handleInputChange}
+                      onChange={description => setFormData(prev => ({ ...prev, description }))}
                       required
-                      rows={6}
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     />
-                    <p className="text-xs text-slate-400 mt-1">Press Enter for a new line. Line breaks will be shown on the league page.</p>
                   </div>
 
                   <div>
@@ -688,7 +687,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onSignOut 
                           </div>
                         </div>
 
-                        <p className="text-slate-600 mb-4 whitespace-pre-line">{tournament.description}</p>
+                        <RichText text={tournament.description} className="mb-4" />
 
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm mb-4">
                           <div>

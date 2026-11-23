@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, MapPin, DollarSign, Trophy, X } from 'lucide-react';
 import { Button } from '../common/Button';
+import { RichText, toPlainText } from '../common/RichText';
 import { Tournament } from '../../types';
 
 interface TournamentCardProps {
@@ -71,7 +72,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
             ref={descriptionRef}
             className="text-slate-600 line-clamp-2 whitespace-pre-line"
           >
-            {tournament.description}
+            {toPlainText(tournament.description)}
           </p>
           {isClamped && (
             <button
@@ -148,7 +149,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({
             <div className="p-6 overflow-y-auto max-h-[calc(85vh-64px)]">
               <div className="mb-6">
                 <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">About this League</h4>
-                <p className="text-slate-700 whitespace-pre-line leading-relaxed">{tournament.description}</p>
+                <RichText text={tournament.description} className="text-slate-700" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">

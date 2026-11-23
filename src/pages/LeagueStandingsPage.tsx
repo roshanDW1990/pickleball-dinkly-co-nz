@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PublicPageHeader } from '../components/common/PublicPageHeader';
 import { Footer } from '../components/common/Footer';
+import { RichText } from '../components/common/RichText';
 import { Trophy, ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { User } from '../types';
 import { supabase } from '../lib/supabase';
@@ -243,7 +244,7 @@ export const LeagueStandingsPage: React.FC<LeagueStandingsPageProps> = ({ user, 
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-slate-800">{league.name}</h1>
-                  <p className="text-slate-600 whitespace-pre-line">{league.description}</p>
+                  <RichText text={league.description} />
                 </div>
               </div>
 

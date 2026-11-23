@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PublicPageHeader } from '../components/common/PublicPageHeader';
 import { Footer } from '../components/common/Footer';
+import { toPlainText } from '../components/common/RichText';
 import { Trophy, ArrowRight, Calendar, Users, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { User } from '../types';
 import { supabase } from '../lib/supabase';
@@ -190,7 +191,7 @@ export const ArchivedStandingsPage: React.FC<ArchivedStandingsPageProps> = ({ us
                   </div>
                 </div>
 
-                <p className="text-slate-600 mb-4 line-clamp-2 whitespace-pre-line">{league.description}</p>
+                <p className="text-slate-600 mb-4 line-clamp-2 whitespace-pre-line">{toPlainText(league.description)}</p>
 
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-sm text-slate-600">
